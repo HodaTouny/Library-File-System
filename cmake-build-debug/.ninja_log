@@ -1,3 +1,4 @@
 # ninja log v5
-0	1701	7227060316534474	CMakeFiles/Library_File_System.dir/main.cpp.obj	488c74fa1f85de93
-1706	2227	7227060321752150	Library_File_System.exe	8ec95038f30457c1
+9	9456	7227087093533336	CMakeFiles/Library_File_System.dir/main.cpp.obj	488c74fa1f85de93
+9459	9842	7227087097343220	Library_File_System.exe	8d4a686b85bd097f
+174	21628	7227080177294290	CMakeFiles/Library_File_System.dir/IFilesSystem.cpp.obj	1a2aa6561681bd81
