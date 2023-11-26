@@ -55,12 +55,6 @@ build CMakeFiles/Library_File_System.dir/main.cpp.obj: CXX_COMPILER__Library_Fil
   OBJECT_DIR = CMakeFiles\Library_File_System.dir
   OBJECT_FILE_DIR = CMakeFiles\Library_File_System.dir
 
-build CMakeFiles/Library_File_System.dir/IFilesSystem.cpp.obj: CXX_COMPILER__Library_File_System_unscanned_Debug C$:/Users/20100/Desktop/assigments/untitled/Library-File-System/IFilesSystem.cpp || cmake_object_order_depends_target_Library_File_System
-  DEP_FILE = CMakeFiles\Library_File_System.dir\IFilesSystem.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always
-  OBJECT_DIR = CMakeFiles\Library_File_System.dir
-  OBJECT_FILE_DIR = CMakeFiles\Library_File_System.dir
-
 build CMakeFiles/Library_File_System.dir/LinkedList.cpp.obj: CXX_COMPILER__Library_File_System_unscanned_Debug C$:/Users/20100/Desktop/assigments/untitled/Library-File-System/LinkedList.cpp || cmake_object_order_depends_target_Library_File_System
   DEP_FILE = CMakeFiles\Library_File_System.dir\LinkedList.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
@@ -75,7 +69,7 @@ build CMakeFiles/Library_File_System.dir/LinkedList.cpp.obj: CXX_COMPILER__Libra
 #############################################
 # Link the executable Library_File_System.exe
 
-build Library_File_System.exe: CXX_EXECUTABLE_LINKER__Library_File_System_Debug CMakeFiles/Library_File_System.dir/main.cpp.obj CMakeFiles/Library_File_System.dir/IFilesSystem.cpp.obj CMakeFiles/Library_File_System.dir/LinkedList.cpp.obj
+build Library_File_System.exe: CXX_EXECUTABLE_LINKER__Library_File_System_Debug CMakeFiles/Library_File_System.dir/main.cpp.obj CMakeFiles/Library_File_System.dir/LinkedList.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\Library_File_System.dir

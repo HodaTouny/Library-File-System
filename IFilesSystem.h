@@ -7,25 +7,26 @@ class  IFilesSystem {
     protected:
     public:
 
-    void deleteRecord(int offset, const std::string& fileName) {
-        fstream file(fileName, std::ios::in | std::ios::out);
+    string deleteRecord(int offset, const string& fileName) {
+        fstream file(fileName, ios::in | ios::out);
         if (!file) {
-            std::cerr << "Error opening file: " << fileName << std::endl;
-            return;
+            std::cerr << "Error opening file: " << fileName << "\n";
+            return"";
         }
-        file.seekg(offset, std::ios::beg);
+        vector<string> record = loadRecord(offset,fileName);
+        file.seekg(offset, ios::beg);
         file<<"*";
         file.close();
-        //function updateIndex File [offset + 1]
+        return record[1];
     }
 
 
-    void addRecord(const std::string data[], int dataSize, const std::string& fileName) {
+    void addRecord(const string data[], int dataSize, const string& fileName) {
         //check avail list first
         int recordLength = 0;
-        ofstream outFile(fileName, std::ios::app);
+        ofstream outFile(fileName, ios::app);
         if (!outFile.is_open()) {
-            cerr << "Error opening file: " << fileName << std::endl;
+            cerr << "Error opening file: " << fileName << "\n";
             return;
         }
         for (int i = 0; i < dataSize; i++) {
@@ -44,33 +45,30 @@ class  IFilesSystem {
 
 
 
-    string loadRecord(int offset, const string& fileName) {
-        string record;
+    vector<string> loadRecord(int offset, const string& fileName) {
+        vector<string> record;
         ifstream file(fileName);
         if (!file.is_open()) {
             std::cerr << "Unable to open file." << std::endl;
-            return"";
+            return record;
         }
-        file.seekg(offset, std::ios::beg);
+        file.seekg(offset,ios::beg);
         char ch;
+        string word;
         while (file.get(ch) && ch != '\n') {
             if (ch == '|') {
-                ch = ' ';
+                record.push_back(word);
+                word = "";
+            } else {
+                word += ch;
             }
-            record+=ch;
         }
-
+        if (!word.empty()) {
+            record.push_back(word);
+        }
         file.close();
         return record;
-
     }
-
-        void updateIndex(string fileName){
-
-        }
-        void loadIndex(string fileName){
-
-        }
 
 };
 
