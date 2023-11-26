@@ -7,16 +7,25 @@ class  IFilesSystem {
     protected:
     public:
 
-         void deleteRecord(string data[],string fileName){
-
-         }
+    void deleteRecord(int offset, const std::string& fileName) {
+        fstream file(fileName, std::ios::in | std::ios::out);
+        if (!file) {
+            std::cerr << "Error opening file: " << fileName << std::endl;
+            return;
+        }
+        file.seekg(offset, std::ios::beg);
+        file<<"*";
+        file.close();
+        //function updateIndex File [offset + 1]
+    }
 
 
     void addRecord(const std::string data[], int dataSize, const std::string& fileName) {
+        //check avail list first
         int recordLength = 0;
-        std::ofstream outFile(fileName, std::ios::app);
+        ofstream outFile(fileName, std::ios::app);
         if (!outFile.is_open()) {
-            std::cerr << "Error opening file: " << fileName << std::endl;
+            cerr << "Error opening file: " << fileName << std::endl;
             return;
         }
         for (int i = 0; i < dataSize; i++) {
@@ -34,9 +43,27 @@ class  IFilesSystem {
 
 
 
-    string loadRecord(int offset,string fileName){
 
+    string loadRecord(int offset, const string& fileName) {
+        string record;
+        ifstream file(fileName);
+        if (!file.is_open()) {
+            std::cerr << "Unable to open file." << std::endl;
+            return"";
         }
+        file.seekg(offset, std::ios::beg);
+        char ch;
+        while (file.get(ch) && ch != '\n') {
+            if (ch == '|') {
+                ch = ' ';
+            }
+            record+=ch;
+        }
+
+        file.close();
+        return record;
+
+    }
 
         void updateIndex(string fileName){
 
