@@ -1,12 +1,11 @@
 # ninja log v5
-7	7498	7227258700813434	CMakeFiles/Library_File_System.dir/main.cpp.obj	488c74fa1f85de93
 73	15771	7227118705469227	CMakeFiles/Library_File_System.dir/LinkedList.cpp.obj	ac8e199f9b3c0609
-7499	7808	7227258704024845	Library_File_System.exe	4832abbc571dce08
+5	3635	7228156414563021	CMakeFiles/Library_File_System.dir/main.cpp.obj	488c74fa1f85de93
+3636	4311	7228156421614164	Library_File_System.exe	4832abbc571dce08
 42	9046	7227175404099353	CMakeFiles/Library_File_System.dir/IFilesSystem.cpp.obj	1a2aa6561681bd81
-1	3758	7227259726949420	build.ninja	5d117f6225c6ec0a
-10	7915	7227266857580123	CMakeFiles/Library_File_System.dir/main.cpp.obj	488c74fa1f85de93
-7917	9386	7227266872465571	Library_File_System.exe	4832abbc571dce08
-9	7530	7227272431032773	CMakeFiles/Library_File_System.dir/main.cpp.obj	488c74fa1f85de93
-7532	8459	7227272440630546	Library_File_System.exe	4832abbc571dce08
-10	10977	7227272890842661	CMakeFiles/Library_File_System.dir/main.cpp.obj	488c74fa1f85de93
-10979	11470	7227272895697465	Library_File_System.exe	4832abbc571dce08
+1	3758	7229011401904221	build.ninja	5d117f6225c6ec0a
+1	447	7229011401904221	build.ninja	5d117f6225c6ec0a
+7	7538	7229011477639158	CMakeFiles/Library_File_System.dir/main.cpp.obj	488c74fa1f85de93
+7540	9911	7229011501440821	Library_File_System.exe	4832abbc571dce08
+7	4087	7229018348034131	CMakeFiles/Library_File_System.dir/main.cpp.obj	488c74fa1f85de93
+4087	4790	7229018354969343	Library_File_System.exe	4832abbc571dce08
