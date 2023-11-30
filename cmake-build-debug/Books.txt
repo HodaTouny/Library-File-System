@@ -1,2 +1,4 @@
 16|Hoda|Maya|Shahd
-*6|Hoda|Maya|Shahd
+*6|Boda|Maya|Shahd
+16|Koda|Maya|Shahd
+16|Loda|Maya|Shahd

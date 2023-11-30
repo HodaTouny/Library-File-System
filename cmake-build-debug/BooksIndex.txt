@@ -1,2 +1,3 @@
-Hoda|0
-Maya|20
+Hoda|50
+Mona|20
+Yasser|0
