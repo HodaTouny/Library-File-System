@@ -15,7 +15,6 @@ public:
             cerr << "Error opening file: " << filename << endl;
             return FileIndex;
         }
-
         string line;
         while (getline(file, line)) {
             istringstream iss(line);
@@ -34,7 +33,19 @@ public:
         return FileIndex;
     }
 
-    };
+    //write inside the index
+    void updateIndexFile(const vector<pair<string, int>>&FileIndex, const string& filename) {
+        ofstream indexFile(filename);
+        for (const auto& record : FileIndex) {
+            indexFile << record.first << "|" << record.second << "\n";
+        }
+        indexFile.close();
+    }
+
+
+
+
+};
 
 
 #endif //LIBRARY_FILE_SYSTEM_INDEXSYSTEM_H

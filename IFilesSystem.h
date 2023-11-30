@@ -14,8 +14,10 @@ class  IFilesSystem {
             return"";
         }
         vector<string> record = loadRecord(offset,fileName);
-        file.seekg(offset, ios::beg);
-        file<<"*";
+        string line;
+        getline(file, line);
+        file.seekp(offset, std::ios::beg);
+        file << '*' << line;
         file.close();
         return record[1];
     }
