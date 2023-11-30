@@ -9,11 +9,7 @@ int main() {
     x.addRecord(data,3,"Books.txt");
     x.addRecord(data,3,"Books.txt");
     x.deleteRecord(20,"Books.txt");
-//     IndexSystem x;
-//    vector<pair<string, int>> result = x.LoadIndexFile("BooksIndex.txt");
-//    for (const auto& entry : result) {
-//        cout << entry.first << ": " << entry.second << endl;
-//    }
+
 
 
 
