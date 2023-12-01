@@ -115,18 +115,18 @@ void LinkedList<T>:: removeAt(int index) {
     delete target;
     size--;
 }
-template <class T>
-T LinkedList<T>::retrieveAt(int index) {
-    if (index<0||index>=size) {
-        cout<<"out of range!!!";
-        return -1 ;
-    }
-    SLLNode<T> *curr = head;
-    for (int i = 0; i < index; i++) {
-        curr=curr->next;
-    }
-    return curr->data;
-}
+//template <class T>
+//T LinkedList<T>::retrieveAt(int index) {
+//    if (index<0||index>=size) {
+//        cout<<"out of range!!!";
+//        return -1 ;
+//    }
+//    SLLNode<T> *curr = head;
+//    for (int i = 0; i < index; i++) {
+//        curr=curr->next;
+//    }
+//    return curr->data;
+//}
 template <class T>
 void LinkedList<T>:: replaceAt(T newElement, int index) {
     if (index<0||index>=size) {
@@ -231,3 +231,4 @@ void LinkedList<T>:: print() {
     }
     cout << endl;
 }
+template class LinkedList<std::string>;

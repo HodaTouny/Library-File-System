@@ -5,7 +5,8 @@ using namespace std;
 
 int main() {
     IFilesSystem x ;
-    string data[3] = {"Hoda","Maya","Shahd"};
+   x.deleteRecord(81,"Books.txt");
+
 
     return 0;
 }
