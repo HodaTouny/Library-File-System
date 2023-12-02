@@ -50,33 +50,83 @@ public:
     string concat(const string& str1, const string& str2) {
         return str1 + "|" + str2;
     }
-    //int header=-1;
-    int extractHeader(const string& fileName) {
-        std::ifstream inputFile(fileName);
-        if (!inputFile) {
-            std::cerr << "Error opening file: " << fileName << "\n";
+//    //int header=-1;
+//    int extractHeader(const string& fileName) {
+//        ifstream inputFile(fileName);
+//        if (!inputFile) {
+//            cerr << "Error opening file: " << fileName << "\n";
+//            return -1;
+//        }
+//        string line;
+//        while (getline(inputFile, line)) {
+//            size_t underscorePos = line.find('_');
+//            if (underscorePos != string::npos) {
+//               string numberStr = line.substr(0, underscorePos);
+//                try {
+//                    return stoi(numberStr);
+//                } catch (const std::invalid_argument& e) {
+//                    cerr << "Invalid number format: " << numberStr << "\n";
+//                } catch (const std::out_of_range& e) {
+//                    cerr << "Number out of range: " << numberStr << "\n";
+//                }
+//            }
+//        }
+//        return -1;
+//    }
+
+    int extractFirstValueFromFile(const string& filename) {
+        ifstream file(filename);
+        if (!file.is_open()) {
+            cerr << "Error opening file: " << filename << "\n";
             return -1;
         }
 
         string line;
-        while (getline(inputFile, line)) {
-            std::size_t underscorePos = line.find('_');
+        getline(file, line);
+        file.close();
 
-            if (underscorePos != string::npos) {
-                std::string numberStr = line.substr(0, underscorePos);
-
-                try {
-                    return stoi(numberStr);
-                } catch (const invalid_argument& e) {
-                    cerr << "Invalid number format: " << numberStr << "\n";
-                } catch (const out_of_range& e) {
-                    cerr << "Number out of range: " << numberStr << "\n";
-                }
+        size_t pipePos = line.find('|');
+        if (pipePos != string::npos) {
+            string numberStr = line.substr(0, pipePos);
+            istringstream iss(numberStr);
+            int firstValue;
+            iss >> firstValue;
+            if (iss.fail()) {
+                cerr << "Invalid number format: " << numberStr << "\n";
+                return -1;
             }
+            return firstValue;
         }
-
         return -1;
     }
+
+    int extractSecondValueFromFile(const string& filename) {
+        ifstream file(filename);
+        if (!file.is_open()) {
+            cerr << "Error opening file: " << filename << "\n";
+            return -1;
+        }
+
+        string line;
+        getline(file, line);
+        file.close();
+
+        size_t pipePos = line.find('|');
+        if (pipePos != string::npos) {
+            string numberStr = line.substr(pipePos + 1);
+            istringstream iss(numberStr);
+            int secondValue;
+            iss >> secondValue;
+            if (iss.fail()) {
+                cerr << "Invalid number format: " << numberStr << "\n";
+                return -1;
+            }
+            return secondValue;
+        }
+
+        return 17;
+    }
+
 
 
     string formatNumber(int value, int digits) {
@@ -129,16 +179,16 @@ public:
         vector<string> record = loadRecord(offset, fileName);
         file.seekp(offset, std::ios::beg);
         string Soffset= to_string(offset);
-        int header= extractHeader(fileName);
+        int header= extractFirstValueFromFile(fileName);
 
         string finalString = concat("*"+to_string(header), record[0]+"|");
         file << finalString;
         file.close();
-        // writeHeader(offset,fileName);
+        updateHeader(offset,fileName);
         return record[1];
     }
 
-    LinkedList<string> AvailCreator(string& fileName) {
+    LinkedList<string> AvailCreator(const string& fileName) {
         LinkedList<string> availList;
 
         fstream file(fileName, ios::in);
