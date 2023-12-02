@@ -6,8 +6,40 @@
 using namespace std;
 
 class  IFilesSystem {
-    protected:
-    public:
+protected:
+public:
+    vector<std::string> loadRecord(int offset, const std::string& fileName) {
+        vector<std::string> record;
+        ifstream file(fileName);
+        if (!file.is_open()) {
+            std::cerr << "Unable to open file." << std::endl;
+            return record;
+        }
+        file.seekg(offset, std::ios::beg);
+        if (!file) {
+            std::cerr << "Error seeking to offset." << std::endl;
+            file.close();
+            return record;
+        }
+        char ch;
+        string word;
+        if (file >> noskipws >> ch) {
+            do {
+                if (ch == '|') {
+                    record.push_back(word);
+                    word = "";
+                } else {
+                    word += ch;
+                }
+            } while (file >> ch && ch != '\n');
+        }
+        if (!word.empty()) {
+            record.push_back(word);
+        }
+        file.close();
+        return record;
+    }
+
 
     string to_string(int value) {
         ostringstream oss;
@@ -63,6 +95,7 @@ class  IFilesSystem {
         file.close();
     }
 
+
     string deleteRecord(int offset, const string& fileName) {
         fstream file(fileName, ios::in | ios::out);
         if (!file) {
@@ -85,9 +118,10 @@ class  IFilesSystem {
         string finalString = concat("*"+to_string(header), to_string(totalSize+1)+"|");
         file << finalString;
         file.close();
-        writeHeader(offset,fileName);
+        // writeHeader(offset,fileName);
         return record[1];
     }
+
     LinkedList<string> AvailCreator(string& fileName) {
         LinkedList<string> availList;
 
@@ -117,58 +151,111 @@ class  IFilesSystem {
         file.close();
         return availList;
     }
-
-
+//    vector<int> extractSize (LinkedList<string> availList) {
+//        vector<int> sizes;
+//        char delimiter='|';
+//        LinkedList<string> tempAVAILList = availList;
+//        bool recordInserted = false;
+//        while (!tempAVAILList.isEmpty() && !recordInserted) {
+//            string availRecord = tempAVAILList.removeFirst();
+//            size_t pos = availRecord.find("|");
+//            if (pos != string::npos) {
+//                int size = stoi(availRecord.substr(pos + 1));
+//                sizes.push_back(size);
+//                }
+//
+//        }
+//
+//    }
+//
+//    void addRecord(const string data[], int dataSize, const string& fileName, LinkedList<string>& AVAILList) {
+//        int header= extractHeader(fileName);
+//        if (header == -1) {
+//            appendToFile(data, dataSize, fileName);
+//        } else {
+//            LinkedList<string> tempAVAILList = AVAILList;
+//            bool recordInserted = false;
+//
+//            while (!tempAVAILList.isEmpty() && !recordInserted) {
+//                string availRecord = tempAVAILList.removeFirst();
+//                size_t pos = availRecord.find("|");
+//                if (pos != string::npos) {
+//                    int offset = stoi(availRecord.substr(1, pos - 1));
+//                    int size = stoi(availRecord.substr(pos + 1));
+//                    if (size >= dataSize) {
+//                        insertRecord(offset, data, dataSize, fileName);
+//                        recordInserted = true;
+//                    }
+//                }
+//            }
+//            if (!recordInserted) {
+//                appendToFile(data, dataSize, fileName);
+//            }
+//        }
+//    }
     void addRecord(const string data[], int dataSize, const string& fileName) {
-        //check avail list first
-        int recordLength = 0;
+        // Check if the file can be opened
         ofstream outFile(fileName, ios::app);
         if (!outFile.is_open()) {
             cerr << "Error opening file: " << fileName << "\n";
             return;
         }
+
+        int recordLength = 0;
         for (int i = 0; i < dataSize; i++) {
             recordLength += data[i].size();
         }
-        recordLength += dataSize;
+        recordLength += dataSize - 1;
         outFile << recordLength;
         for (int i = 0; i < dataSize; i++) {
             outFile << "|" << data[i];
         }
         outFile << "\n";
+
         outFile.close();
     }
 
+//
+//
+//    void appendToFile(const string data[], int dataSize, const string& fileName) {
+//        int recordLength = 0;
+//        ofstream outFile(fileName, ios::app);
+//        if (!outFile.is_open()) {
+//            cerr << "Error opening file: " << fileName << "\n";
+//            return;
+//        }
+//        for (int i = 0; i < dataSize; i++) {
+//            recordLength += data[i].size();
+//        }
+//        recordLength += dataSize;
+//        outFile << recordLength;
+//        for (int i = 0; i < dataSize; i++) {
+//            outFile << "|" << data[i];
+//        }
+//        outFile << "\n";
+//        outFile.close();
+//    }
+    void insertRecord(int offset, const string data[], int dataSize, const string& fileName) {
+        std::fstream file(fileName, std::ios::in | std::ios::out);
 
-
-
-
-    vector<string> loadRecord(int offset, const string& fileName) {
-        vector<string> record;
-        ifstream file(fileName);
-        if (!file.is_open()) {
-            std::cerr << "Unable to open file." << std::endl;
-            return record;
+        if (!file) {
+            std::cerr << "Error opening file: " << fileName << std::endl;
+            return;
         }
-        file.seekg(offset,ios::beg);
-        char ch;
-        string word;
-        while (file.get(ch) && ch != '\n') {
-            if (ch == '|') {
-                record.push_back(word);
-                word = "";
-            } else {
-                word += ch;
-            }
+        file.seekp(offset, std::ios::beg);
+        int recordLength = 0;
+        for (int i = 0; i < dataSize; i++) {
+            recordLength += data[i].size();
         }
-        if (!word.empty()) {
-            record.push_back(word);
+        recordLength += dataSize;
+        file << recordLength;
+        for (int i = 0; i < dataSize; i++) {
+            file << "|" << data[i];
         }
         file.close();
-        return record;
+
     }
 
 };
-
 
 #endif //LIBRARY_FILE_SYSTEM_IFILESSYSTEM_H
