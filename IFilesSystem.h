@@ -8,16 +8,16 @@ using namespace std;
 class  IFilesSystem {
 protected:
 public:
-    vector<std::string> loadRecord(int offset, const std::string& fileName) {
-        vector<std::string> record;
+    vector<string> loadRecord(int offset, const string& fileName) {
+        vector<string> record;
         ifstream file(fileName);
         if (!file.is_open()) {
-            std::cerr << "Unable to open file." << std::endl;
+            cerr << "Unable to open file.\n";
             return record;
         }
-        file.seekg(offset, std::ios::beg);
+        file.seekg(offset,ios::beg);
         if (!file) {
-            std::cerr << "Error seeking to offset." << std::endl;
+            std::cerr << "Error seeking to offset.\n";
             file.close();
             return record;
         }
@@ -47,7 +47,7 @@ public:
         return oss.str();
     }
 
-    std::string concat(const string& str1, const string& str2) {
+    string concat(const string& str1, const string& str2) {
         return str1 + "|" + str2;
     }
     //int header=-1;
@@ -77,24 +77,48 @@ public:
 
         return -1;
     }
-    void writeHeader(int number, const string& fileName) {
+
+
+    string formatNumber(int value, int digits) {
+        string formatted = to_string(value);
+        if (formatted.length() < digits) {
+            formatted = formatted + string(digits - formatted.length(), '_');
+        } else if (formatted.length() > digits) {
+            formatted = formatted.substr(0, digits);
+        }
+        return formatted;
+    }
+
+    void updateOffset(int offset, const string& fileName) {
         fstream file(fileName, ios::in | ios::out);
         if (!file) {
             cerr << "Error opening file: " << fileName << "\n";
             return;
         }
-        string firstLine;
-        getline(file, firstLine);
-        int underscoresNeeded = 20 - to_string(number).length();
-        string newHeader = to_string(number);
-        for (int i = 0; i < underscoresNeeded; ++i) {
-            newHeader += "_";
-        }
+        string existingHeader;
+        getline(file, existingHeader);
+        string LastDeletedOffset  = existingHeader.substr(0, 9);
+        string formattedOffset = formatNumber(offset, 5);
+        string newHeader = LastDeletedOffset + "|" +  formattedOffset;
         file.seekp(0, ios::beg);
-        file << newHeader;
+        file <<newHeader<<"\n";
         file.close();
     }
-
+    void updateHeader(int number, const string& fileName) {
+        fstream file(fileName, ios::in | ios::out);
+        if (!file) {
+            cerr << "Error opening file: " << fileName << "\n";
+            return;
+        }
+        string existingHeader;
+        getline(file, existingHeader);
+        string firstNineDigits = existingHeader.substr(10, 5);
+        string formattedNumber  = formatNumber(number, 9);
+        string newHeader = formattedNumber + "|" + firstNineDigits ;
+        file.seekp(0, ios::beg);
+        file <<newHeader<<"\n";
+        file.close();
+    }
 
     string deleteRecord(int offset, const string& fileName) {
         fstream file(fileName, ios::in | ios::out);
@@ -103,19 +127,11 @@ public:
             return "";
         }
         vector<string> record = loadRecord(offset, fileName);
-        int totalSize = 0;
-        for (const string& str : record) {
-            totalSize += str.length();
-        }
-        for (const string& str : record) {
-            cout<<str<<" ";
-        }
-        cout<<endl;
-        cout<<totalSize<<endl;
         file.seekp(offset, std::ios::beg);
         string Soffset= to_string(offset);
         int header= extractHeader(fileName);
-        string finalString = concat("*"+to_string(header), to_string(totalSize+1)+"|");
+
+        string finalString = concat("*"+to_string(header), record[0]+"|");
         file << finalString;
         file.close();
         // writeHeader(offset,fileName);

@@ -5,9 +5,8 @@ using namespace std;
 
 int main() {
     IFilesSystem x ;
-    x.deleteRecord(110,"Books.txt");
-
-
+    x.updateHeader(100,"Books.txt");
+    x.updateOffset(80,"Books.txt");
 
 
     //To make Index Equation: headerSize +  i[previous record size] + [i*2]+2
