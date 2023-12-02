@@ -49,12 +49,12 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "C:/Users/Maya/Library-File-System/cmake-build-debug",
-		"source" : "C:/Users/Maya/Library-File-System"
+		"build" : "C:/Users/20100/Desktop/assigments/untitled/Library-File-System/cmake-build-debug",
+		"source" : "C:/Users/20100/Desktop/assigments/untitled/Library-File-System"
 	},
 	"version" : 
 	{
 		"major" : 2,
-		"minor" : 4
+		"minor" : 5
 	}
 }

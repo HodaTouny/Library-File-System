@@ -5,7 +5,7 @@ using namespace std;
 
 int main() {
     IFilesSystem x ;
-   x.deleteRecord(81,"Books.txt");
+   x.deleteRecord(40,"Books.txt");
 
 
     return 0;
