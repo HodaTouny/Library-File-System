@@ -8,4 +8,6 @@ add_executable(Library_File_System main.cpp
         LinkedList.cpp
         LinkedList.h
         IndexSystem.h
+        Interface.cpp
+        Interface.h
 )
