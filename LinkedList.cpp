@@ -231,4 +231,34 @@ void LinkedList<T>:: print() {
     }
     cout << endl;
 }
+template <class T>
+T LinkedList<T>::removeAtHead() {
+    if (head == nullptr) {
+        cerr << "List is empty. Cannot remove from head." << endl;
+        return T();
+    }
+
+    T removedData = head->data;
+    SLLNode<T>* temp = head;
+    head = head->next;
+    delete temp;
+    size--;
+    if (head == nullptr) {
+        tail = nullptr;
+    }
+
+    return removedData;
+}
+template <class T>
+T LinkedList<T>::getNextNode() {
+    if (head == nullptr) {
+        return T();
+    }
+    if (head->next != nullptr) {
+        return head->next->data;
+    } else {
+        return "null";
+    }
+}
+template class LinkedList<std::string>;
 template class LinkedList<std::string>;
