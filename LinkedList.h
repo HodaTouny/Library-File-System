@@ -36,6 +36,9 @@ public:
     int linkedListSize();
     void clear();
     void print();
+    T removeAtHead() ;
+    T getNextNode();
+
 
 };
 
