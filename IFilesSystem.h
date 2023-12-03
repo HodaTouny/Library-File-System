@@ -254,15 +254,16 @@ public:
     }
 
 
-//    string extractValueBetweenBars(const string& input) {
-//        size_t startPos = input.find('|') + 1;
-//        size_t endPos = input.find('|', startPos);
-//        if (startPos != string::npos && endPos != string::npos) {
-//            string valueStr = input.substr(startPos, endPos - startPos);
-//            return valueStr;
-//        }
-//        return "";
-//    }
+    string extractValueBetweenBars(const string& input) {
+        size_t startPos = input.find('|') + 1;
+        size_t endPos = input.find('|', startPos);
+        if (startPos != string::npos && endPos != string::npos) {
+            string valueStr = input.substr(startPos, endPos - startPos);
+            return valueStr;
+        }
+        return "";
+    }
+
     void addRecord(LinkedList<string>&AVAIL,string fileName,string data[],int dataSize){
         int recordL = findRecordLength(data,dataSize);
         int bestFit = findBestFit(AVAIL,recordL);
@@ -274,12 +275,14 @@ public:
             auto current = AVAIL.head;
             while (current != nullptr) {
                 string availRecord = current->data;
-                size_t pos = availRecord.find("|");
-                int offset;
-                if (pos != string::npos) {
+                string valueStr = extractValueBetweenBars(availRecord);
+                int value = stoi(valueStr);
+                if(value == bestFit) {
+                    int offset;
+                    size_t pos = availRecord.find("|");
                     offset = stoi(availRecord.substr(0, pos));
                     int size = stoi(availRecord.substr(pos + 1));
-                    if (size == bestFit && AVAIL.getNextNodeDataPtr() == nullptr) {
+                    if (size == bestFit && current->next == nullptr) {
                         insertRecord(header, data, dataSize, fileName, size);
                         updateHeader(offset,"Books.txt");
                     }else if (size == bestFit) {
@@ -290,13 +293,15 @@ public:
                             insertRecord(offset, data, dataSize, fileName, size);
                         }
                     }
+                    AVAIL.removeNodeWithValue(availRecord);
+                    return;
                 }
-                AVAIL.removeNodeWithValue(availRecord);
                 current = current->next;
             }
-        }
 
-    }
+            }
+
+}
 
 
     void appendToFile(const string data[], int dataSize, const string &fileName) {
