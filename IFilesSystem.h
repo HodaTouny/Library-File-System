@@ -208,7 +208,7 @@ public:
 
                     if (secondPos != string::npos) {
                         string extractedData = line.substr(startPos, secondPos - startPos);
-                        availList.insertAtTail("" + extractedData + "|");
+                        availList.insertAtTail(extractedData + "|");
                     }
                 }
             }
@@ -217,98 +217,114 @@ public:
         file.close();
         return availList;
     }
-//    vector<int> extractSize (LinkedList<string> availList) {
-//        vector<int> sizes;
-//        char delimiter='|';
-//        LinkedList<string> tempAVAILList = availList;
-//        bool recordInserted = false;
-//        while (!tempAVAILList.isEmpty() && !recordInserted) {
-//            string availRecord = tempAVAILList.removeFirst();
-//            size_t pos = availRecord.find("|");
-//            if (pos != string::npos) {
-//                int size = stoi(availRecord.substr(pos + 1));
-//                sizes.push_back(size);
-//                }
-//
+    vector<int> extractSize(LinkedList<string>& availList) {
+        vector<int> sizes;
+        SLLNode<string>* current = availList.head;
+        while (current) {
+            string availRecord = current->data;
+            size_t pos = availRecord.find('|');
+            if (pos != string::npos) {
+                int size = stoi(availRecord.substr(pos+1));
+                sizes.push_back(size);
+            }
+            current = current->next;
+        }
+        sort(sizes.begin(), sizes.end());
+        return sizes;
+    }
+
+    int findRecordLength(string data[], int dataSize){
+        int recordLength = 0;
+        for (int i = 0; i < dataSize; i++) {
+            recordLength += data[i].size();
+        }
+        recordLength += dataSize;
+        return recordLength;
+    }
+    int findBestFit(LinkedList<string>&AVAIL,int recordLength){
+        vector<int> sizes = extractSize(AVAIL);
+        int bestFit = 0;
+        for (int size : sizes) {
+            if (recordLength <= size) {
+                bestFit = size;
+                break;
+            }
+        }
+        return bestFit;
+    }
+
+
+//    string extractValueBetweenBars(const string& input) {
+//        size_t startPos = input.find('|') + 1;
+//        size_t endPos = input.find('|', startPos);
+//        if (startPos != string::npos && endPos != string::npos) {
+//            string valueStr = input.substr(startPos, endPos - startPos);
+//            return valueStr;
 //        }
-//
+//        return "";
 //    }
-//
-//    void addRecord(const string data[], int dataSize, const string& fileName, LinkedList<string>& AVAILList) {
-//        int header= extractHeader(fileName);
-//        if (header == -1) {
-//            appendToFile(data, dataSize, fileName);
-//        } else {
-//            LinkedList<string> tempAVAILList = AVAILList;
-//            bool recordInserted = false;
-//
-//            while (!tempAVAILList.isEmpty() && !recordInserted) {
-//                string availRecord = tempAVAILList.removeFirst();
-//                size_t pos = availRecord.find("|");
-//                if (pos != string::npos) {
-//                    int offset = stoi(availRecord.substr(1, pos - 1));
-//                    int size = stoi(availRecord.substr(pos + 1));
-//                    if (size >= dataSize) {
-//                        insertRecord(offset, data, dataSize, fileName);
-//                        recordInserted = true;
-//                    }
-//                }
-//            }
-//            if (!recordInserted) {
-//                appendToFile(data, dataSize, fileName);
-//            }
-//        }
-//    }
-    void addRecord(const string data[], int dataSize, const string& fileName) {
-        // Check if the file can be opened
+    void addRecord(LinkedList<string>&AVAIL,string fileName,string data[],int dataSize){
+        int recordL = findRecordLength(data,dataSize);
+        int bestFit = findBestFit(AVAIL,recordL);
+        int header = extractFirstValueFromFile(fileName);
+
+        if (header == -1 || bestFit == 0) {
+            appendToFile(data, dataSize, fileName);
+        } else {
+            auto current = AVAIL.head;
+            while (current != nullptr) {
+                string availRecord = current->data;
+                size_t pos = availRecord.find("|");
+                int offset;
+                if (pos != string::npos) {
+                    offset = stoi(availRecord.substr(0, pos));
+                    int size = stoi(availRecord.substr(pos + 1));
+                    if (size == bestFit && AVAIL.getNextNodeDataPtr() == nullptr) {
+                        insertRecord(header, data, dataSize, fileName, size);
+                        updateHeader(offset,"Books.txt");
+                    }else if (size == bestFit) {
+                        string *nextNodeDataPtr =AVAIL.getNextNodeDataPtr();
+                        if (nextNodeDataPtr != nullptr) {
+                            string nextRecord =  *nextNodeDataPtr;
+                            offset = stoi(nextRecord.substr(0, pos));
+                            insertRecord(offset, data, dataSize, fileName, size);
+                        }
+                    }
+                }
+                AVAIL.removeNodeWithValue(availRecord);
+                current = current->next;
+            }
+        }
+
+    }
+
+
+    void appendToFile(const string data[], int dataSize, const string &fileName) {
+        int recordLength = 0;
         ofstream outFile(fileName, ios::app);
         if (!outFile.is_open()) {
             cerr << "Error opening file: " << fileName << "\n";
             return;
         }
-
-        int recordLength = 0;
         for (int i = 0; i < dataSize; i++) {
             recordLength += data[i].size();
         }
-        recordLength += dataSize - 1;
+        recordLength += dataSize;
         outFile << recordLength;
         for (int i = 0; i < dataSize; i++) {
             outFile << "|" << data[i];
         }
         outFile << "\n";
-
         outFile.close();
     }
 
-//
-//
-//    void appendToFile(const string data[], int dataSize, const string& fileName) {
-//        int recordLength = 0;
-//        ofstream outFile(fileName, ios::app);
-//        if (!outFile.is_open()) {
-//            cerr << "Error opening file: " << fileName << "\n";
-//            return;
-//        }
-//        for (int i = 0; i < dataSize; i++) {
-//            recordLength += data[i].size();
-//        }
-//        recordLength += dataSize;
-//        outFile << recordLength;
-//        for (int i = 0; i < dataSize; i++) {
-//            outFile << "|" << data[i];
-//        }
-//        outFile << "\n";
-//        outFile.close();
-//    }
-    void insertRecord(int offset, const string data[], int dataSize, const string& fileName) {
-        std::fstream file(fileName, std::ios::in | std::ios::out);
-
+    void insertRecord(int offset, const string data[], int dataSize, const string &fileName, int oldSize) {
+        fstream file(fileName, ios::in | ios::out);
         if (!file) {
-            std::cerr << "Error opening file: " << fileName << std::endl;
+            cerr << "Error opening file: " << fileName << endl;
             return;
         }
-        file.seekp(offset, std::ios::beg);
+        file.seekp(offset, ios::beg);
         int recordLength = 0;
         for (int i = 0; i < dataSize; i++) {
             recordLength += data[i].size();
@@ -318,8 +334,13 @@ public:
         for (int i = 0; i < dataSize; i++) {
             file << "|" << data[i];
         }
+        int underscoresNeeded = oldSize - recordLength;
+        string underscores;
+        for (int i = 0; i < underscoresNeeded; ++i) {
+            underscores += "_";
+        }
+        file << underscores;
         file.close();
-
     }
 
 };

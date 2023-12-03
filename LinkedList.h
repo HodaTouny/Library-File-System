@@ -24,7 +24,6 @@ public:
     void insertAtHead(T element) ;
     void insertAtTail(T element) ;
     void insertAt(T element, int index);
-    void removeAtHead();
     void removeAtTail();
     void removeAt(int index) ;
     T retrieveAt(int index) ;
@@ -36,8 +35,10 @@ public:
     int linkedListSize();
     void clear();
     void print();
-    T removeAtHead() ;
-    T getNextNode();
+    T removeAtHead();
+    T * getNextNodeDataPtr();
+    void removeNodeWithValue(T value);
+    ~LinkedList();
 
 
 };

@@ -2,81 +2,96 @@
 #include "LinkedList.h"
 
 template <class T>
-SLLNode<T>::SLLNode (T element) {
+SLLNode<T>::SLLNode(T element) {
     data = element;
-    next = NULL;
+    next = nullptr;
 }
+
 template <class T>
 LinkedList<T>::LinkedList() {
-    head=NULL;
-    size=0;
+    head = nullptr;
+    size = 0;
 }
 
 template <class T>
-void LinkedList<T>:: insertAtHead(T element) {
-    SLLNode<T>* newNode=new SLLNode<T>(element);
-    newNode->next=head;
-    head=newNode;
+void LinkedList<T>::insertAtHead(T element) {
+    SLLNode<T>* newNode = new SLLNode<T>(element);
+    newNode->next = head;
+    head = newNode;
     size++;
 }
+
 template <class T>
 void LinkedList<T>::insertAtTail(T element) {
-    if (head==NULL) {
+    if (head == nullptr) {
         insertAtHead(element);
         return;
     }
 
-    SLLNode<T>* temp=head;
-    while (temp->next!=NULL)
-    {
-        temp=temp->next;
+    SLLNode<T>* temp = head;
+    while (temp->next != nullptr) {
+        temp = temp->next;
     }
-    SLLNode<T>* newnode=new SLLNode<T>(element);
-    newnode->data=element;
-    temp->next=newnode;
-    newnode->next = NULL;
+
+    SLLNode<T>* newNode = new SLLNode<T>(element);
+    temp->next = newNode;
+    newNode->next = nullptr;
     size++;
 }
+
 template <class T>
 void LinkedList<T>::insertAt(T element, int index) {
-    if (index<0||index>size) {
-        cout<<"out of range!!!";
+    if (index < 0 || index > size) {
+        std::cout << "Out of range!!!" << std::endl;
         return;
     }
-    if (index==0) {
+
+    if (index == 0) {
         insertAtHead(element);
         return;
     }
-    if (index==size) {
+
+    if (index == size) {
         insertAtTail(element);
         return;
     }
-    SLLNode<T> *newNode=new SLLNode<T>(element);
-    SLLNode<T> *curr=head;
-    for (int i=0; i<index-1; i++) {
-        curr=curr->next;
+
+    SLLNode<T>* newNode = new SLLNode<T>(element);
+    SLLNode<T>* curr = head;
+
+    for (int i = 0; i < index - 1; i++) {
+        curr = curr->next;
     }
-    newNode->next=curr->next;
-    curr->next=newNode;
+
+    newNode->next = curr->next;
+    curr->next = newNode;
     size++;
 }
+
 template <class T>
-void LinkedList<T>::removeAtHead() {
-    if (head==NULL) {
-        cout<<"Empty list!!!"<<endl;
-        return;
+T LinkedList<T>::removeAtHead() {
+    if (head == nullptr) {
+        std::cout << "Empty list!!!" << std::endl;
+        return T();  // Return a default-constructed value for the type T
     }
-    SLLNode<T> *ptr=head;
-    if (head==tail) {
-        head=NULL;
-        tail=NULL;
-    }
-    else {
-        head=head->next;
+
+    T removedData;
+    SLLNode<T>* ptr = head;
+
+    if (head->next == nullptr) {
+        removedData = head->data;
+        delete head;
+        head = nullptr;
+    } else {
+        removedData = head->data;
+        head = head->next;
         delete ptr;
     }
+
     size--;
+    return removedData;
 }
+
 template <class T>
 void LinkedList<T>:: removeAtTail() {
     if (head==NULL) {
@@ -115,18 +130,28 @@ void LinkedList<T>:: removeAt(int index) {
     delete target;
     size--;
 }
-//template <class T>
-//T LinkedList<T>::retrieveAt(int index) {
-//    if (index<0||index>=size) {
-//        cout<<"out of range!!!";
-//        return -1 ;
-//    }
-//    SLLNode<T> *curr = head;
-//    for (int i = 0; i < index; i++) {
-//        curr=curr->next;
-//    }
-//    return curr->data;
-//}
+template <class T>
+void LinkedList<T>::removeNodeWithValue(T value) {
+    SLLNode<T> *current = head;
+    SLLNode<T> *prev = nullptr;
+    while (current != nullptr && current->data != value) {
+        prev = current;
+        current = current->next;
+    }
+    if (current == nullptr) {
+        cout << "Node not found!" << endl;
+        return;
+    }
+    if (prev == nullptr) {
+        head = current->next;
+    } else {
+        prev->next = current->next;
+    }
+
+    delete current;
+    size--;
+}
+
 template <class T>
 void LinkedList<T>:: replaceAt(T newElement, int index) {
     if (index<0||index>=size) {
@@ -232,33 +257,23 @@ void LinkedList<T>:: print() {
     cout << endl;
 }
 template <class T>
-T LinkedList<T>::removeAtHead() {
-    if (head == nullptr) {
-        cerr << "List is empty. Cannot remove from head." << endl;
-        return T();
+T * LinkedList<T>::getNextNodeDataPtr(){
+    if (head == nullptr || head->next == nullptr) {
+        return nullptr;
     }
 
-    T removedData = head->data;
-    SLLNode<T>* temp = head;
-    head = head->next;
-    delete temp;
-    size--;
-    if (head == nullptr) {
-        tail = nullptr;
-    }
-
-    return removedData;
+    return &(head->next->data);
 }
+
 template <class T>
-T LinkedList<T>::getNextNode() {
-    if (head == nullptr) {
-        return T();
+LinkedList<T>::~LinkedList() {
+    while (head != nullptr) {
+        SLLNode<T>* temp = head;
+        head = head->next;
+        delete temp;
     }
-    if (head->next != nullptr) {
-        return head->next->data;
-    } else {
-        return "null";
-    }
+    size = 0;
 }
-template class LinkedList<std::string>;
+
+
 template class LinkedList<std::string>;
