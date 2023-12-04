@@ -40,7 +40,6 @@ public:
         return record;
     }
 
-
     string to_string(int value) {
         ostringstream oss;
         oss << value;
@@ -50,29 +49,7 @@ public:
     string concat(const string& str1, const string& str2) {
         return str1 + "|" + str2;
     }
-//    //int header=-1;
-//    int extractHeader(const string& fileName) {
-//        ifstream inputFile(fileName);
-//        if (!inputFile) {
-//            cerr << "Error opening file: " << fileName << "\n";
-//            return -1;
-//        }
-//        string line;
-//        while (getline(inputFile, line)) {
-//            size_t underscorePos = line.find('_');
-//            if (underscorePos != string::npos) {
-//               string numberStr = line.substr(0, underscorePos);
-//                try {
-//                    return stoi(numberStr);
-//                } catch (const std::invalid_argument& e) {
-//                    cerr << "Invalid number format: " << numberStr << "\n";
-//                } catch (const std::out_of_range& e) {
-//                    cerr << "Number out of range: " << numberStr << "\n";
-//                }
-//            }
-//        }
-//        return -1;
-//    }
+
 
     int extractFirstValueFromFile(const string& filename) {
         ifstream file(filename);
@@ -180,7 +157,6 @@ public:
         file.seekp(offset, std::ios::beg);
         string Soffset= to_string(offset);
         int header= extractFirstValueFromFile(fileName);
-
         string finalString = concat("*"+to_string(header), record[0]+"|");
         file << finalString;
         file.close();
@@ -188,34 +164,59 @@ public:
         return record[1];
     }
 
-    LinkedList<string> AvailCreator(const string& fileName) {
+    LinkedList<string> readAvailFromFile(const string& fileName) {
         LinkedList<string> availList;
-
-        fstream file(fileName, ios::in);
-        if (!file) {
-            cerr << "Error opening file: " << fileName << "\n";
+        ifstream file(fileName);
+        if (!file.is_open()) {
+            cerr << "Error opening file for reading: " << fileName << "\n";
             return availList;
         }
-
         string line;
         while (getline(file, line)) {
-            if (line.size() > 0 && line[0] == '*') {
-                size_t startPos = 1;
-                size_t firstPos = line.find('|', startPos);
-
-                if (firstPos != string::npos) {
-                    size_t secondPos = line.find('|', firstPos + 1);
-
-                    if (secondPos != string::npos) {
-                        string extractedData = line.substr(startPos, secondPos - startPos);
-                        availList.insertAtTail(extractedData + "|");
-                    }
-                }
-            }
+            availList.insertAtTail(line);
         }
-
         file.close();
         return availList;
+    }
+
+
+    string AvailCreator(const string& fileName, int offset) {
+        LinkedList<string> availList;
+        ifstream file(fileName, ios::in);
+        if (!file.is_open()) {
+            cerr << "Error opening file for reading: " << fileName << "\n";
+            return "";
+        }
+        file.seekg(offset);
+        string line;
+        string extractedData;
+        getline(file, line);
+        size_t startPos = 1;
+        cout<<line<<"\n";
+        size_t firstPos = line.find('|', startPos);
+        if (firstPos != string::npos) {
+            size_t secondPos = line.find('|', firstPos + 1);
+            if (secondPos != string::npos) {
+                extractedData = line.substr(startPos, secondPos - startPos);
+            }
+        }
+        cout << extractedData;
+        file.close();
+        return extractedData;
+    }
+
+    void writeAvailToFile(const LinkedList<string>& availList, const string& fileName) {
+        ofstream file(fileName, ios::out);
+        if (!file.is_open()) {
+            cerr << "Error opening file for writing: " << fileName << "\n";
+            return;
+        }
+        SLLNode<string>* current = availList.head;
+        while (current) {
+            file << current->data << "\n";
+            current = current->next;
+        }
+        file.close();
     }
     vector<int> extractSize(LinkedList<string>& availList) {
         vector<int> sizes;
@@ -256,19 +257,29 @@ public:
 
     string extractValueBetweenBars(const string& input) {
         size_t startPos = input.find('|') + 1;
-        size_t endPos = input.find('|', startPos);
-        if (startPos != string::npos && endPos != string::npos) {
-            string valueStr = input.substr(startPos, endPos - startPos);
+        if (startPos != string::npos ) {
+            string valueStr = input.substr(startPos, input.size() - startPos);
             return valueStr;
         }
         return "";
     }
+    string updateNextNodeData(string x, string secondString) {
+        size_t pos = x.find('|');
+        if (pos == string::npos) {
+            return x;
+        }
+        size_t secondPos = secondString.find('|');
+        if (secondPos != string::npos) {
+            return x.substr(0, pos + 1) + secondString.substr(secondPos + 1);
+        } else {
+            return x;
+        }
+    }
 
-    void addRecord(LinkedList<string>&AVAIL,string fileName,string data[],int dataSize){
+    void addRecord(LinkedList<string>&AVAIL,string fileName,string data[],int dataSize=3){
         int recordL = findRecordLength(data,dataSize);
         int bestFit = findBestFit(AVAIL,recordL);
         int header = extractFirstValueFromFile(fileName);
-
         if (header == -1 || bestFit == 0) {
             appendToFile(data, dataSize, fileName);
         } else {
@@ -286,11 +297,13 @@ public:
                         insertRecord(header, data, dataSize, fileName, size);
                         updateHeader(offset,"Books.txt");
                     }else if (size == bestFit) {
-                        string *nextNodeDataPtr =AVAIL.getNextNodeDataPtr();
-                        if (nextNodeDataPtr != nullptr) {
-                            string nextRecord =  *nextNodeDataPtr;
+                        string nextNodeDataPtr =current->next->data;
+                        if (!nextNodeDataPtr.empty()) {
+                            string nextRecord =  nextNodeDataPtr;
                             offset = stoi(nextRecord.substr(0, pos));
                             insertRecord(offset, data, dataSize, fileName, size);
+                            string newValue =  updateNextNodeData(current->data,current->next->data);
+                            current->next->data = newValue;
                         }
                     }
                     AVAIL.removeNodeWithValue(availRecord);
@@ -299,10 +312,9 @@ public:
                 current = current->next;
             }
 
-            }
+        }
 
-}
-
+    }
 
     void appendToFile(const string data[], int dataSize, const string &fileName) {
         int recordLength = 0;
@@ -341,13 +353,11 @@ public:
         }
         int underscoresNeeded = oldSize - recordLength;
         string underscores;
-        for (int i = 0; i < underscoresNeeded; ++i) {
+        for (int i = 0; i <=underscoresNeeded; ++i) {
             underscores += "_";
         }
         file << underscores;
         file.close();
     }
-
 };
-
 #endif //LIBRARY_FILE_SYSTEM_IFILESSYSTEM_H

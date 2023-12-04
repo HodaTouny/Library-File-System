@@ -114,8 +114,8 @@ void LibraryInterface::handlePrintBook() {
 }
 
 LibraryInterface::LibraryInterface() {
-    AvailListAuthor = fileSystemClass.AvailCreator("Authors.txt");
-    AvailListBook = fileSystemClass.AvailCreator("Books.txt");
+    AvailListAuthor = fileSystemClass.readAvailFromFile("Authors.txt");
+    AvailListBook = fileSystemClass.readAvailFromFile("Books.txt");
     AuthorPK = indexSystem.LoadIndexFile("Authors.txt");
     BookPK = indexSystem.LoadIndexFile("Books.txt");
 }
@@ -123,5 +123,7 @@ LibraryInterface::LibraryInterface() {
 LibraryInterface::~LibraryInterface() {
     indexSystem.uploadIndexFile(AuthorPK,"Authors.txt");
     indexSystem.uploadIndexFile(BookPK,"Books.txt");
+    fileSystemClass.writeAvailToFile(AvailListBook,"AVAILBook.txt");
+    fileSystemClass.writeAvailToFile(AvailListAuthor,"AVAILAuthor.txt");
 
 }
