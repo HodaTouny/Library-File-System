@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.22.3)
 project(Library_File_System)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -10,4 +10,5 @@ add_executable(Library_File_System main.cpp
         IndexSystem.h
         Interface.cpp
         Interface.h
-)
+        QueryProcessor.cpp
+        QueryProcessor.h)

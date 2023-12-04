@@ -1,8 +1,8 @@
 
 #ifndef LIBRARY_FILE_SYSTEM_INDEXSYSTEM_H
 #define LIBRARY_FILE_SYSTEM_INDEXSYSTEM_H
-
-
+#include <bits/stdc++.h>
+using namespace std;
 class IndexSystem {
 private:
     void sortPairs(vector<pair<string, int>> &FileIndex){
@@ -51,9 +51,9 @@ public:
     //remove deleted record from the index
     void deleteFromIndex(vector<pair<string, int>>& fileIndex,string targetString) {
         auto it = remove_if(fileIndex.begin(), fileIndex.end(),
-                                 [targetString](const pair<string, int>& element) {
-                                     return element.first == targetString;
-                                 });
+                            [targetString](const pair<string, int>& element) {
+                                return element.first == targetString;
+                            });
 
         fileIndex.erase(it, fileIndex.end());
     }
