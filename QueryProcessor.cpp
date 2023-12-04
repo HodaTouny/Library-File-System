@@ -2,16 +2,16 @@
 #include <algorithm>
 #include <iostream>
 #include <sstream>
-IFilesSystem filesSystem;
-IndexSystem indexSystem;
-vector<pair<string, int>> AuthorPK = indexSystem.LoadIndexFile("AuthorPK.txt");
+IFilesSystem filesSystem1;
+IndexSystem indexSystem1;
+vector<pair<string, int>> AuthorPK = indexSystem1.LoadIndexFile("AuthorPK.txt");
 //vector<pair<string, int>> AuthorName = indexSystem.LoadIndexFile("AuthorName.txt");
-vector<pair<string, int>> BookPK = indexSystem.LoadIndexFile("BookPK.txt");
+vector<pair<string, int>> BookPK = indexSystem1.LoadIndexFile("BookPK.txt");
 //vector<pair<string, int>> AuthorID = indexSystem.LoadIndexFile("AuthorID.txt");
 void QueryProcessor::processQuery(string &query) {
     string command, project,tableName, columnName, value;
     transform(query.begin(), query.end(), query.begin(), ::tolower);
-    cout<<"query:"<<query<<endl;
+//    cout<<"query:"<<query<<endl;
     parseQuery(query, command,project, tableName, columnName, value);
 //    cout<<"command:"<<command<<endl;
 //    cout<<"project:"<<project<<endl;
@@ -44,7 +44,7 @@ void QueryProcessor::searchAuthors( string &project, string columnName,  string 
         int index = binarySearch(AuthorPK, value);
         if (index != -1) {
             int offset = AuthorPK[index].second;
-            vector<string> record = filesSystem.loadRecord(offset, "Authors.txt");
+            vector<string> record = filesSystem1.loadRecord(offset, "Authors.txt");
             printAuthorDetails(record, project);
         } else {
             cout << "Author with AuthorID '" << value << "' not found." << endl;
@@ -54,7 +54,7 @@ void QueryProcessor::searchAuthors( string &project, string columnName,  string 
 //        int index = binarySearch(AuthorName, value);
 //        if (index != -1) {
 //            int offset = AuthorName[index].second;
-//            vector<string> record = filesSystem.loadRecord(offset, "Authors.txt");
+//            vector<string> record = filesSystem1.loadRecord(offset, "Authors.txt");
 //            printAuthorDetails(record, project);
 //        } else {
 //            cout << "Author with AuthorName '" << value << "' not found." << endl;
@@ -71,7 +71,7 @@ void QueryProcessor::searchBooks( string &project,  string &columnName,  string 
         int index = binarySearch(BookPK, value);
         if (index != -1) {
             int offset = BookPK[index].second;
-            vector<string> record = filesSystem.loadRecord(offset, "Books.txt");
+            vector<string> record = filesSystem1.loadRecord(offset, "Books.txt");
             printBookDetails(record, project);
         } else {
             cout << "Book with ISBN '" << value << "' not found." << endl;
@@ -81,7 +81,7 @@ void QueryProcessor::searchBooks( string &project,  string &columnName,  string 
 //        int index = binarySearch(AuthorID, value);
 //        if (index != -1) {
 //            int offset = AuthorID[index].second;
-//            vector<string> record = filesSystem.loadRecord(offset, "Books.txt");
+//            vector<string> record = filesSystem1.loadRecord(offset, "Books.txt");
 //            printBookDetails(record, project);
 //        } else {
 //            cout << "Books with AuthorID '" << value << "' not found." << endl;

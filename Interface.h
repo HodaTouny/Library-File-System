@@ -3,6 +3,7 @@
 #include "LinkedList.h"
 #include "IFilesSystem.h"
 #include "IndexSystem.h"
+#include"QueryProcessor.h"
 class LibraryInterface{
 private:
     LinkedList<string>AvailListAuthor;

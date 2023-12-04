@@ -5,10 +5,10 @@ using namespace std;
 
 int main() {
     //put inside Books.txt header :  -1_______|0___   first line offset: 17
-    IFilesSystem x;
-    QueryProcessor y;
-    string query = "SELECT authorid,autHORname,address FROM Authors WHERE AuthorID = '00003'";
-    y.processQuery(query);
+//    IFilesSystem x;
+//    QueryProcessor y;
+//    string query = "SELECT authorid,autHORname,address FROM Authors WHERE AuthorID = '00003'";
+//    y.processQuery(query);
 //    string maya[] ={"00001","Hoda","Hoda@gmail.com"};
 //    string maya2[] ={"00002","nada","Nada2@yahoo.com"};
 //    string maya3[] ={"00003","Nour","Nour@gmail.com"};
@@ -26,6 +26,8 @@ int main() {
   //  x.writeAvailToFile(ll,"AVAILBook.txt");
     //To make Index Equation: headerSize +  i[previous record size] + [i*2]+2
     //To update index: offset from header + previous record size + 2
+    LibraryInterface libraryInterface;
+    libraryInterface.menu();
 
 
     return 0;
