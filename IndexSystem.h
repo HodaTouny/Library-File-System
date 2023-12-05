@@ -142,56 +142,39 @@ public:
         }
         file << endl;
     }
-    vector<pair<int, LinkedList<string>>> loadIndexList(const string& fileName) {
-        vector<pair<int, LinkedList<string>>> result;
-        ifstream file(fileName);
-        if (!file.is_open()) {
-            cerr << "Error opening file: " << fileName << endl;
-            return result;
+
+    int calculateOffset(int rnn,int header=5,int fixedlength=22){
+        string filename;
+        return header+(rnn*fixedlength)+2;
+    }
+
+
+    int getValueAfterLastDelimiter(const string& filePath, int offset) {
+        ifstream file(filePath);
+
+        if (!file) {
+            cerr << "Error opening file: " << filePath << std::endl;
+            return -1;
         }
+
+        file.seekg(offset);
+
         string line;
-        while (getline(file, line)) {
-            stringstream ss(line);
-            string token;
-            vector<string> tokens;
-            while (getline(ss, token, '|')) {
-                tokens.push_back(token);
-            }
-            for(int i=0;i<tokens.size();i++){
-                cout<<tokens[i]<<" ";
-            }
-            if (tokens.size() == 3) {
-                int RRN = stoi(tokens[0]);
-                string bookName = tokens[1];
-                int pointer = stoi(tokens[2]);
-
-                auto it = find_if(result.begin(), result.end(), [RRN](const pair<int, LinkedList<string>>& element) {
-                    return element.first == RRN;
-                });
-
-                if (it == result.end()) {
-                    LinkedList<string> newList;
-                    newList.insertAtTail(bookName);
-                    result.emplace_back(RRN, newList);
-                } else {
-                    it->second.insertAtTail(bookName);
-                }
-
-                // Find the corresponding pair for the pointer
-                auto pointerIt = find_if(result.begin(), result.end(), [pointer](const pair<int, LinkedList<string>>& element) {
-                    return element.first == pointer;
-                });
-
-                // If the pair exists for the pointer, append the book to its linked list
-                if (pointerIt != result.end()) {
-                    pointerIt->second.insertAtTail(bookName);
-                }
-            }
-        }
+        getline(file, line);
 
         file.close();
-        return result;
+
+        size_t lastDelimiterPos = line.find_last_of('|');
+
+        string valueStr = line.substr(lastDelimiterPos + 1);
+        try {
+            return stoi(valueStr);
+        } catch (const invalid_argument& e) {
+            cerr << "Invalid integer value: " << valueStr <<endl;
+            return -1;
+        }
     }
+
 
 
 };
