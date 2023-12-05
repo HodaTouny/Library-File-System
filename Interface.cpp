@@ -32,11 +32,11 @@ int LibraryInterface::menu() {
             }
             case 3: {
                 handleUpdateAuthorName();
-]                break;
+                break;
             }
             case 4: {
                 handleUpdateBookTitle();
-]                break;
+             break;
             }
             case 5: {
                 handleDeleteBook();

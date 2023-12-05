@@ -23,11 +23,29 @@ int main() {
 //    x.addRecord(ll,"Authors.txt",maya);
 //    x.addRecord(ll,"Authors.txt",maya2);
 //    x.addRecord(ll,"Authors.txt",maya3);
-  //  x.writeAvailToFile(ll,"AVAILBook.txt");
+    //  x.writeAvailToFile(ll,"AVAILBook.txt");
     //To make Index Equation: headerSize +  i[previous record size] + [i*2]+2
     //To update index: offset from header + previous record size + 2
-    LibraryInterface libraryInterface;
-    libraryInterface.menu();
+//    LibraryInterface libraryInterface;
+//    libraryInterface.menu();
+//IndexSystem x;
+    string fileName = "BookSKList.txt";
+   // vector<pair<int, LinkedList<string>>> result = x.loadIndexList(fileName);
+
+//    for (const auto& pair : result) {
+//        cout << "Index: " << pair.first << " - Books: ";
+//        pair.second.print();
+//        cout << endl;
+//    }
+ IndexSystem x;
+ x.updateLastValue("BookSKList.txt",7);
+//IFilesSystem x;
+//vector <string> vec=x.loadRecord(17,"BooksSKist.txt");
+//for(int i=0;i < vec.size();i++){
+//    cout<<vec[i]<<" ";
+//}
+
+
 
 
     return 0;

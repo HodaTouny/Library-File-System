@@ -34,7 +34,14 @@ public:
     bool isEmpty();
     int linkedListSize();
     void clear();
-    void print();
+    //void print();
+    void print() const {
+        SLLNode<T> *current = head;
+        while (current != nullptr) {
+            cout << current->data << " ";
+            current = current->next;
+        }
+    }
     T removeAtHead();
     T * getNextNodeDataPtr();
     void removeNodeWithValue(T value);

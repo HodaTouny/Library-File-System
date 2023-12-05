@@ -247,15 +247,15 @@ void LinkedList<T>:: clear() {
     }
 
 }
-template <class T>
-void LinkedList<T>:: print() {
-    SLLNode<T> *temp=head;
-    while (temp!=NULL) {
-        cout<<temp->data << " ";
-        temp=temp->next;
-    }
-    cout << endl;
-}
+//template <class T>
+//void LinkedList<T>:: print() {
+//    SLLNode<T> *temp=head;
+//    while (temp!=NULL) {
+//        cout<<temp->data << " ";
+//        temp=temp->next;
+//    }
+//    cout << endl;
+//}
 template <class T>
 T * LinkedList<T>::getNextNodeDataPtr(){
     if (head == nullptr || head->next == nullptr) {

@@ -2,6 +2,7 @@
 #ifndef LIBRARY_FILE_SYSTEM_INDEXSYSTEM_H
 #define LIBRARY_FILE_SYSTEM_INDEXSYSTEM_H
 #include <bits/stdc++.h>
+#include "IFilesSystem.h"
 using namespace std;
 class IndexSystem {
 private:
@@ -66,7 +67,131 @@ public:
         sortPairs(FileIndex);
         return true;
     }
+    string extractHeader(const string& fileName) {
+        std::ifstream inputFile(fileName);
+        if (!inputFile) {
+            std::cerr << "Error opening file: " << fileName << "\n";
+            return "";
+        }
+        string line;
+        while (getline(inputFile, line)) {
+            std::size_t underscorePos = line.find('_');
+            if (underscorePos != string::npos) {
+                std::string numberStr = line.substr(0, underscorePos);
+                return numberStr;
+            }
+            return "";
+        }
+    }
 
+    string formatNumber(int value, int digits) {
+        string formatted = to_string(value);
+        if (formatted.length() < digits) {
+            formatted = formatted + string(digits - formatted.length(), '_');
+        } else if (formatted.length() > digits) {
+            formatted = formatted.substr(0, digits);
+        }
+        return formatted;
+    }
+
+//if record begin with asterisk dont put
+    vector<vector<string>>loadFileIntoVector(const string& fileName) {
+        vector<vector<string>>data;
+        ifstream file(fileName);
+        string line;
+        while (std::getline(file, line)) {
+
+            istringstream iss(line);
+            vector<std::string> tokens;
+            string token;
+            while (std::getline(iss, token, '|')) {
+                tokens.push_back(token);
+            }
+            data.push_back(tokens);
+        }
+        data.erase(data.begin());
+        file.close();
+        return data;
+    }
+
+    void updateLastValue(const string& fileName, int offset) {
+        std::fstream file(fileName, std::ios::in | std::ios::out);
+        if (!file.is_open()) {
+            std::cerr << "Error opening file." << std::endl;
+            return;
+        }
+        IFilesSystem load;
+        vector<string> record=load.loadRecord(offset,fileName);
+        for( int i = 0; i <record.size(); i++){
+            cout<<record[i]<<" ";
+        }
+        cout<<endl;
+        if (record.empty()) {
+            std::cerr << "Error: no record found at the given offset." << std::endl;
+            return;
+        }
+        string integer = extractHeader(fileName);
+         cout<<"i: "<<integer;
+        record.back() = integer;
+        file.seekp(offset);
+        for (int i = 0; i < record.size(); ++i) {
+            file << record[i];
+            if (i < record.size() - 1) {
+                file << "|";
+            }
+        }
+        file << endl;
+    }
+    vector<pair<int, LinkedList<string>>> loadIndexList(const string& fileName) {
+        vector<pair<int, LinkedList<string>>> result;
+        ifstream file(fileName);
+        if (!file.is_open()) {
+            cerr << "Error opening file: " << fileName << endl;
+            return result;
+        }
+        string line;
+        while (getline(file, line)) {
+            stringstream ss(line);
+            string token;
+            vector<string> tokens;
+            while (getline(ss, token, '|')) {
+                tokens.push_back(token);
+            }
+            for(int i=0;i<tokens.size();i++){
+                cout<<tokens[i]<<" ";
+            }
+            if (tokens.size() == 3) {
+                int RRN = stoi(tokens[0]);
+                string bookName = tokens[1];
+                int pointer = stoi(tokens[2]);
+
+                auto it = find_if(result.begin(), result.end(), [RRN](const pair<int, LinkedList<string>>& element) {
+                    return element.first == RRN;
+                });
+
+                if (it == result.end()) {
+                    LinkedList<string> newList;
+                    newList.insertAtTail(bookName);
+                    result.emplace_back(RRN, newList);
+                } else {
+                    it->second.insertAtTail(bookName);
+                }
+
+                // Find the corresponding pair for the pointer
+                auto pointerIt = find_if(result.begin(), result.end(), [pointer](const pair<int, LinkedList<string>>& element) {
+                    return element.first == pointer;
+                });
+
+                // If the pair exists for the pointer, append the book to its linked list
+                if (pointerIt != result.end()) {
+                    pointerIt->second.insertAtTail(bookName);
+                }
+            }
+        }
+
+        file.close();
+        return result;
+    }
 
 
 };
