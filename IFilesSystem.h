@@ -8,7 +8,10 @@ using namespace std;
 class  IFilesSystem {
 protected:
 public:
-    vector<string> loadRecord(int offset, const string& fileName) {
+    void removeUnderscores(string& str) {
+        str.erase(remove(str.begin(), str.end(), '_'), str.end());
+    }
+    vector<string> loadRecord(int offset, string fileName) {
         vector<string> record;
         ifstream file(fileName);
         if (!file.is_open()) {
@@ -24,8 +27,12 @@ public:
         char ch;
         string word;
         if (file >> noskipws >> ch) {
+            if(ch == '*'){
+                cout<<"This Record is deleted,You can't get it!!!\n";
+            }
             do {
                 if (ch == '|') {
+                    removeUnderscores(word);
                     record.push_back(word);
                     word = "";
                 } else {
@@ -34,11 +41,13 @@ public:
             } while (file >> ch && ch != '\n');
         }
         if (!word.empty()) {
+            removeUnderscores(word);
             record.push_back(word);
         }
         file.close();
         return record;
     }
+
 
     string to_string(int value) {
         ostringstream oss;
@@ -46,12 +55,12 @@ public:
         return oss.str();
     }
 
-    string concat(const string& str1, const string& str2) {
+    string concat(string str1,string str2) {
         return str1 + "|" + str2;
     }
 
 
-    int extractFirstValueFromFile(const string& filename) {
+    int extractFirstValueFromFile(string filename) {
         ifstream file(filename);
         if (!file.is_open()) {
             cerr << "Error opening file: " << filename << "\n";
@@ -77,7 +86,7 @@ public:
         return -1;
     }
 
-    int extractSecondValueFromFile(const string& filename) {
+    int extractSecondValueFromFile(string filename) {
         ifstream file(filename);
         if (!file.is_open()) {
             cerr << "Error opening file: " << filename << "\n";
@@ -116,7 +125,7 @@ public:
         return formatted;
     }
 
-    void updateOffset(int offset, const string& fileName) {
+    void updateOffset(int offset,string fileName) {
         fstream file(fileName, ios::in | ios::out);
         if (!file) {
             cerr << "Error opening file: " << fileName << "\n";
@@ -131,7 +140,7 @@ public:
         file <<newHeader<<"\n";
         file.close();
     }
-    void updateHeader(int number, const string& fileName) {
+    void updateHeader(int number, string fileName) {
         fstream file(fileName, ios::in | ios::out);
         if (!file) {
             cerr << "Error opening file: " << fileName << "\n";
@@ -147,7 +156,7 @@ public:
         file.close();
     }
 
-    string deleteRecord(int offset, const string& fileName) {
+    string deleteRecord(int offset, string fileName) {
         fstream file(fileName, ios::in | ios::out);
         if (!file) {
             std::cerr << "Error opening file: " << fileName << "\n";
@@ -164,7 +173,7 @@ public:
         return record[1];
     }
 
-    LinkedList<string> readAvailFromFile(const string& fileName) {
+    LinkedList<string> readAvailFromFile(string fileName) {
         LinkedList<string> availList;
         ifstream file(fileName);
         if (!file.is_open()) {
@@ -180,7 +189,7 @@ public:
     }
 
 
-    string AvailCreator(const string& fileName, int offset) {
+    string AvailCreator(string fileName, int offset) {
         LinkedList<string> availList;
         ifstream file(fileName, ios::in);
         if (!file.is_open()) {
@@ -255,7 +264,7 @@ public:
     }
 
 
-    string extractValueBetweenBars(const string& input) {
+    string extractValueBetweenBars( string input) {
         size_t startPos = input.find('|') + 1;
         if (startPos != string::npos ) {
             string valueStr = input.substr(startPos, input.size() - startPos);
@@ -316,7 +325,7 @@ public:
 
     }
 
-    void appendToFile(const string data[], int dataSize, const string &fileName) {
+    void appendToFile(const string data[], int dataSize,  string fileName) {
         int recordLength = 0;
         ofstream outFile(fileName, ios::app);
         if (!outFile.is_open()) {
@@ -335,7 +344,7 @@ public:
         outFile.close();
     }
 
-    void insertRecord(int offset, const string data[], int dataSize, const string &fileName, int oldSize) {
+    void insertRecord(int offset, const string data[], int dataSize,  string fileName, int oldSize) {
         fstream file(fileName, ios::in | ios::out);
         if (!file) {
             cerr << "Error opening file: " << fileName << endl;
@@ -359,5 +368,17 @@ public:
         file << underscores;
         file.close();
     }
+    void updateRecord(int offset,  string newValue, string fileName,  LinkedList<string>& availList) {
+        vector<string> originalRecord = loadRecord(offset, fileName);
+        if (originalRecord.size() >= 3) {
+            originalRecord[2] = newValue;
+            originalRecord.erase(originalRecord.begin());
+            deleteRecord(offset, fileName);
+             appendToFile(originalRecord.data(),originalRecord.size(),fileName);
+        }
+    }
+
+
+
 };
 #endif //LIBRARY_FILE_SYSTEM_IFILESSYSTEM_H
