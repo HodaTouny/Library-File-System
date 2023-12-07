@@ -5,9 +5,7 @@
 IFilesSystem filesSystem1;
 IndexSystem indexSystem1;
 vector<pair<string, int>> AuthorPK = indexSystem1.LoadIndexFile("AuthorPK.txt");
-//vector<pair<string, int>> AuthorName = indexSystem.LoadIndexFile("AuthorName.txt");
 vector<pair<string, int>> BookPK = indexSystem1.LoadIndexFile("BookPK.txt");
-//vector<pair<string, int>> AuthorID = indexSystem.LoadIndexFile("AuthorID.txt");
 void QueryProcessor::processQuery(string &query) {
     string command, project,tableName, columnName, value;
     transform(query.begin(), query.end(), query.begin(), ::tolower);

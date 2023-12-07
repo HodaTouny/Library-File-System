@@ -284,20 +284,6 @@ T * LinkedList<T>::getNextNodeDataPtr(){
     return &(head->next->data);
 }
 template <class T>
-bool LinkedList<T>::isNullPointer(int index) const {
-    if (index < 0 || index >= size) {
-        cout << "Index out of range";
-        return false;
-    }
-
-    SLLNode<T>* curr = head;
-    for (int i = 0; i < index; i++) {
-        curr = curr->next;
-    }
-
-    return curr->next == nullptr;
-}
-template <class T>
 int LinkedList<T>::indexOf(T element) {
     SLLNode<T>* curr = head;
     int index = 0;

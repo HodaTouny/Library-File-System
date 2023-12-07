@@ -42,7 +42,6 @@ public:
     T * getNextNodeDataPtr();
     void removeNodeWithValue(T value);
     ~LinkedList();
-    bool isNullPointer(int index) const;
 
 };
 

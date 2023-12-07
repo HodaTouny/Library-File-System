@@ -8,7 +8,7 @@ using namespace std;
 int main() {
     IndexSystem indexSystem;
 
-    vector<pair<string, string>> firstFileIndex = {{"m", "0"}, {"ahmed", "2"}, {"yasser", "4"}};
+    vector<pair<string, int>> firstFileIndex = {{"m", 0}, {"ahmed", 2}, {"yasser", 4}};
 
     LinkedList<string>* ll = new LinkedList<string>();
     LinkedList<string>* ll2 = new LinkedList<string>();
@@ -22,10 +22,10 @@ int main() {
     ll2->insertAtHead("book5");
     ll3->insertAtHead("book6");
 
-    vector<pair<string, LinkedList<string>*>> secondFileIndex = {
-            {"0", ll},
-            {"2", ll2},
-            {"4", ll3}
+    vector<pair<int, LinkedList<string>*>> secondFileIndex = {
+            {0, ll},
+            {2, ll2},
+            {4, ll3}
     };
 
     string target = "book4";
