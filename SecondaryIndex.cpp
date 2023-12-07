@@ -1,10 +1,10 @@
 #include "SecondaryIndex.h"
-void SecondaryIndex::deleteFromSecondaryIndex(vector<pair<string, string>>& fileIndex,
-                              vector<pair<string, LinkedList<string>*>>& secondaryIndex,
+
+void deleteFromSecondaryIndex(vector<pair<string, int>>& fileIndex,vector<pair<int, LinkedList<string>*>>& secondaryIndex,
                               const string& targetString, const string& targetName) {
     for (int i = 0; i < fileIndex.size(); i++) {
         if (fileIndex[i].first == targetName) {
-            string rnn = fileIndex[i].second;
+            int rnn = fileIndex[i].second;
             for (int j = 0; j < secondaryIndex.size(); j++) {
                 int index = secondaryIndex[j].second->indexOf(targetString);
                 if (index != -1) {
@@ -17,6 +17,7 @@ void SecondaryIndex::deleteFromSecondaryIndex(vector<pair<string, string>>& file
         }
     }
 }
+
 
 vector<pair<int, LinkedList<string>*>>SecondaryIndex:: loadLinkedListFile(string fileName) {
     vector<pair<int, LinkedList<string>*>> data;
