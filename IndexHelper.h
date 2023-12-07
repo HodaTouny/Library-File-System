@@ -3,10 +3,11 @@
 #include <bits/stdc++.h>
 #include "AVAILSystem.h"
 #include "LinkedList.h"
+#include "EntityFiles.h"
 using namespace std;
 class  IndexHelper {
 private:
-    AVAILSystem fileSystem;
+    EntityFiles fileSystem;
 protected:
     void sortPairs(vector<pair<string, int>> &FileIndex);
     string extractHeader(string fileName);
@@ -16,6 +17,7 @@ protected:
     string writer(int integer,string number);
     void removeUnderscores(string& str);
     vector<string> parseString(const string& inputString);
+    int getValueAfterLastDelimiter(const string& filePath, int offset);
 
 };
 
