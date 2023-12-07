@@ -76,9 +76,9 @@ void IndexHelper:: writeHeader(string fileName) {
 int IndexHelper:: calculateFixedOffset(int rnn) {
     return 5 + (rnn * 23) + (rnn *2) + 2;
 }
-int getValueAfterLastDelimiter(const string& filePath, int offset) {
-    ifstream file(filePath);
 
+int IndexHelper:: getValueAfterLastDelimiter(const string& filePath, int offset) {
+    ifstream file(filePath);
     if (!file) {
         cerr << "Error opening file: " << filePath << std::endl;
         return -1;
