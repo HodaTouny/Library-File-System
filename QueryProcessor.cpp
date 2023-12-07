@@ -7,22 +7,34 @@
 #include "SecondaryIndex.h"
 EntityFiles entityFiles;
 
-void QueryProcessor::processQuery(string query,vector<pair<string,int>>authorPK,vector<pair<string,int>>bookPK) {
+void QueryProcessor::processQuery(string query,vector<pair<string,int>>authorPK,vector<pair<string,int>>bookPK,vector<pair<string,int>>authorSKFirst,vector<pair<int,LinkedList<string>*>>authorSKSecond,vector<pair<string,int>>bookSKFirst,vector<pair<int,LinkedList<string>*>>bookSKSecond) {
     if (query.empty()) {
         cout << "Query is empty." << endl;
         return;
     }
     AuthorPK= authorPK;
     BookPK= bookPK;
+    BookSKFirst=bookSKFirst;
+    BookSKSecond=bookSKSecond;
+
     string command, project,tableName, columnName, value;
-    transform(query.begin(), query.end(), query.begin(), ::tolower);
-    parseQuery(query, command,project, tableName, columnName, value);;
+    size_t posEqual = query.find('=');
+    if (posEqual != string::npos) {
+        transform(query.begin(), query.begin() + posEqual, query.begin(), ::tolower);
+    } else{
+        transform(query.begin(), query.end(), query.begin(), ::tolower);
+    } parseQuery(query, command,project, tableName, columnName, value);
+
 }
 void QueryProcessor::parseQuery(const string &query, string &command, string &project, string &tableName, string &columnName, string &value) {
     size_t pos = query.find_first_not_of(" ");
     command = query.substr(pos, query.find(" ", pos) - pos);
     command.erase(remove_if(command.begin(), command.end(), ::isspace), command.end());
-    pos = query.find("select", pos) + 7;
+    if (command!="select") {
+        cout << "Invalid command: " << command << endl;
+        return;
+    }
+    pos = query.find(command, pos) + 7;
     size_t pos2 = query.find("from", pos);
     if (pos2 == string::npos) {
         cout << "Error: 'from' not found in the query." << endl;
@@ -89,7 +101,6 @@ void QueryProcessor::searchFunction(string &tableName, string &project,  string 
 
 
 void QueryProcessor::searchAuthors(string &project, string columnName,  string &value) {
-    columnName.erase(std::remove_if(columnName.begin(), columnName.end(), ::isspace), columnName.end());
     if (columnName == "authorid") {
         int index = binarySearch(AuthorPK, value);
         if (index != -1) {
@@ -116,7 +127,6 @@ void QueryProcessor::searchAuthors(string &project, string columnName,  string &
 }
 
 void QueryProcessor::searchBooks(string &project,  string &columnName,  string &value) {
-    columnName.erase(remove_if(columnName.begin(), columnName.end(), ::isspace), columnName.end());
     if (columnName == "isbn") {
         int index = binarySearch(BookPK, value);
         if (index != -1) {
@@ -127,18 +137,29 @@ void QueryProcessor::searchBooks(string &project,  string &columnName,  string &
             cout << "Book with ISBN '" << value << "' not found." << endl;
         }
     }
-//    else if (columnName == "authorid") {
-//        int index = binarySearch(AuthorID, value);
-//        if (index != -1) {
-//            int offset = AuthorID[index].second;
-//            vector<string> record = entityFiles.loadRecord(offset, "Books.txt");
-//            printBookDetails(record, project);
-//        } else {
-//            cout << "Books with AuthorID '" << value << "' not found." << endl;
-//        }
-//    }
+    else if (columnName == "authorid") {
+        int index_1= binarySearch(BookSKFirst,value);
+        if (index_1 != -1) {
+            int rnn = BookSKFirst[index_1].second;
+            int vecRNN = binarySearch(BookSKSecond, rnn);
+            LinkedList<string> *list = BookSKSecond[vecRNN].second;
+            for (int i = 0; i < list->size; i++) {
+                string value = list->getNode(i)->data;
+                cout << value << endl;
+//                int index = binarySearch(BookPK,value);
+//                if(index!=-1){
+//                    vector<string> record = entityFiles.loadRecord(BookPK[index].second, "Books.txt");
+//                    printBookDetails(record, project);
+//                }
+            }
+        } else {
+            cout << "Book with AuthorID '" << value << "' not found." << endl;
+            return;
+        }
+    }
     else {
         cout << "Unsupported column for Books: " << columnName << endl;
+        return;
     }
 }
 
@@ -158,9 +179,27 @@ int QueryProcessor::binarySearch(const vector<pair<string, int>> arr, const stri
             right = mid - 1;
         }
     }
+    return -1;
+}
+int QueryProcessor::binarySearch(const vector<pair<int, LinkedList<string>*>> arr, const int key) {
+    int left = 0;
+    int right = arr.size() - 1;
+
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+
+        if (arr[mid].first == key) {
+            return mid;
+        } else if (arr[mid].first < key) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
 
     return -1;
 }
+
 void QueryProcessor::printBookDetails(vector<string> &record, string project) {
     project.erase(remove_if(project.begin(), project.end(), ::isspace), project.end());
     if (project == "all" || project == "*") {
