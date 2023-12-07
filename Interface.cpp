@@ -101,11 +101,11 @@ void LibraryInterface::handleDeleteAuthor() {
 }
 
 void LibraryInterface::handleWriteQuery() {
-//    string query;
-//    cout<<"Enter your query: ";
-//    cin.ignore();
-//    getline(cin,query);
-//    queryProcessor.processQuery(query);
+    string query;
+    cout<<"Enter your query: ";
+    cin.ignore();
+    getline(cin,query);
+    queryProcessor.processQuery(query,AuthorPK,BookPK);
 }
 void LibraryInterface::handlePrintAuthor() {
 //    string authorID;
@@ -130,13 +130,13 @@ void LibraryInterface::handlePrintBook() {
 LibraryInterface::LibraryInterface() {
     AvailListAuthor = availSystem.readAvailFromFile("AVAILAuthors.txt");
     AvailListBook = availSystem.readAvailFromFile("AVAILBooks.txt");
-    AuthorPK = primaryIndex.LoadIndexFile("Authors.txt");
-    BookPK = primaryIndex.LoadIndexFile("Books.txt");
+    AuthorPK = primaryIndex.LoadIndexFile("AuthorPK.txt");
+    BookPK = primaryIndex.LoadIndexFile("BookPK.txt");
 }
 
 LibraryInterface::~LibraryInterface() {
-   primaryIndex.uploadIndexFile(AuthorPK,"Authors.txt");
-    primaryIndex.uploadIndexFile(BookPK,"Books.txt");
+   primaryIndex.uploadIndexFile(AuthorPK,"AuthorPK.txt");
+    primaryIndex.uploadIndexFile(BookPK,"BookPK.txt");
     availSystem.writeAvailToFile(AvailListBook,"AVAILBook.txt");
     availSystem.writeAvailToFile(AvailListAuthor,"AVAILAuthor.txt");
 
