@@ -77,6 +77,11 @@ int IndexHelper:: calculateFixedOffset(int rnn) {
     return 5 + (rnn * 23) + (rnn *2) + 2;
 }
 
+int IndexHelper:: calculateVariableLengthOffset(int previousRecordSize,int LastOffset){
+    return LastOffset + previousRecordSize + 2;
+}
+
+
 int IndexHelper:: getValueAfterLastDelimiter(const string& filePath, int offset) {
     ifstream file(filePath);
     if (!file) {
@@ -119,3 +124,4 @@ vector<string> IndexHelper::parseString(const string& inputString) {
     }
     return result;
 }
+

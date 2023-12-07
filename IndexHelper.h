@@ -6,8 +6,9 @@
 #include "EntityFiles.h"
 using namespace std;
 class  IndexHelper {
-private:
+protected:
     EntityFiles fileSystem;
+    FilesHelper fileHelper;
 protected:
     void sortPairs(vector<pair<string, int>> &FileIndex);
     string extractHeader(string fileName);
@@ -18,6 +19,7 @@ protected:
     void removeUnderscores(string& str);
     vector<string> parseString(const string& inputString);
     int getValueAfterLastDelimiter(const string& filePath, int offset);
+    int calculateVariableLengthOffset(int previousRecordSize,int LastOffset);
 
 };
 

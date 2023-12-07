@@ -42,9 +42,34 @@ void PrimaryIndex:: deleteFromIndex(vector<pair<string, int>>& fileIndex, string
     fileIndex.erase(it, fileIndex.end());
 }
 
-bool PrimaryIndex:: insertIntoIndex(vector<pair<string, int>>& FileIndex, string key, int offset){
+bool PrimaryIndex:: insertIntoIndex(vector<pair<string, int>>& FileIndex, string key,string fileName){
+    int LastOffset = fileHelper.extractSecondValueFromFile(fileName);
+    int offS = FileIndex[FileIndex.size()-1].second;
+    int previousSize = previousRecordSize(fileName,offS);
+    int offset = calculateVariableLengthOffset(previousSize,LastOffset);
     FileIndex.push_back(pair<string ,int>{key,offset});
     sortPairs(FileIndex);
+    fileHelper.updateOffset(offset,fileName);
     return true;
+}
+
+int PrimaryIndex:: previousRecordSize(string filename,int offset){
+    ifstream file(filename);
+    if (!file.is_open()) {
+        cerr << "Error opening file." << "\n";
+        return 1;
+    }
+    file.seekg(offset,ios::beg);
+    string Line;
+    getline(file,Line);
+    string firstValue;
+    for(int i=0;i<Line.size();i++){
+        if(Line[i] == '|'){
+            break;
+        }
+        firstValue+=Line[i];
+    }
+    file.close();
+    return stoi(firstValue);
 }
 

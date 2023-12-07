@@ -5,7 +5,7 @@
 using namespace std;
 
 class FilesHelper{
-protected:
+public:
     void removeUnderscores(string& str);
     string to_string(int value);
     string concat(string str1,string str2);

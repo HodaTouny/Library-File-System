@@ -48,11 +48,9 @@ int FilesHelper::extractSecondValueFromFile(string filename) {
         cerr << "Error opening file: " << filename << "\n";
         return -1;
     }
-
     string line;
     getline(file, line);
     file.close();
-
     size_t pipePos = line.find('|');
     if (pipePos != string::npos) {
         string numberStr = line.substr(pipePos + 1);
