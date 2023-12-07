@@ -12,6 +12,7 @@ public:
     vector<string> loadRecord(int offset,string fileName);
     void addRecordToSecondaryIndex(vector<pair<string, int>>& fileIndex,vector<pair<int,
             LinkedList<string>*>>& secondaryIndex ,string data[],int num);
+    void forPush();
 
 };
 
