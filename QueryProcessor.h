@@ -1,7 +1,3 @@
-//
-// Created by user on 12/4/2023.
-//
-
 #ifndef LIBRARY_FILE_SYSTEM_QUERYPROCESSOR_H
 #define LIBRARY_FILE_SYSTEM_QUERYPROCESSOR_H
 
@@ -11,8 +7,8 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include"IndexSystem.h"
-#include "IFilesSystem.h"
+#include"IndexHelper.h"
+#include "AVAILSystem.h"
 #include "bits/stdc++.h"
 using namespace std;
 

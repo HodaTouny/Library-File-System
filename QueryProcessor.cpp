@@ -1,11 +1,15 @@
 #include "QueryProcessor.h"
+#include "PrimaryIndex.h"
+#include "EntityFiles.h"
 #include <algorithm>
 #include <iostream>
 #include <sstream>
-IFilesSystem filesSystem1;
-IndexSystem indexSystem1;
-vector<pair<string, int>> AuthorPK = indexSystem1.LoadIndexFile("AuthorPK.txt");
-vector<pair<string, int>> BookPK = indexSystem1.LoadIndexFile("BookPK.txt");
+EntityFiles filesSystem1;
+PrimaryIndex PrimaryIndex;
+vector<pair<string, int>> AuthorPK = PrimaryIndex.LoadIndexFile("AuthorPK.txt");
+//vector<pair<string, int>> AuthorName = indexSystem.LoadIndexFile("AuthorName.txt");
+vector<pair<string, int>> BookPK = PrimaryIndex.LoadIndexFile("BookPK.txt");
+//vector<pair<string, int>> AuthorID = indexSystem.LoadIndexFile("AuthorID.txt");
 void QueryProcessor::processQuery(string &query) {
     string command, project,tableName, columnName, value;
     transform(query.begin(), query.end(), query.begin(), ::tolower);

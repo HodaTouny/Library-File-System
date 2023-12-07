@@ -1,8 +1,8 @@
 #ifndef LIBRARY_FILE_SYSTEM_INTERFACE_H
 #define LIBRARY_FILE_SYSTEM_INTERFACE_H
 #include "LinkedList.h"
-#include "IFilesSystem.h"
-#include "IndexSystem.h"
+#include "AVAILSystem.h"
+#include "IndexHelper.h"
 #include"QueryProcessor.h"
 class LibraryInterface{
 private:

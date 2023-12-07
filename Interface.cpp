@@ -1,8 +1,12 @@
 #include "Interface.h"
 #include <bits/stdc++.h>
+#include "PrimaryIndex.h"
+#include "SecondaryIndex.h"
 using namespace std;
-IFilesSystem fileSystemClass;
-IndexSystem indexSystem;
+AVAILSystem availSystem;
+PrimaryIndex primaryIndex;
+SecondaryIndex secondaryIndex;
+
 QueryProcessor queryProcessor;
 int LibraryInterface::menu() {
     while (true) {
@@ -97,43 +101,43 @@ void LibraryInterface::handleDeleteAuthor() {
 }
 
 void LibraryInterface::handleWriteQuery() {
-    string query;
-    cout<<"Enter your query: ";
-    cin.ignore();
-    getline(cin,query);
-    queryProcessor.processQuery(query);
+//    string query;
+//    cout<<"Enter your query: ";
+//    cin.ignore();
+//    getline(cin,query);
+//    queryProcessor.processQuery(query);
 }
 void LibraryInterface::handlePrintAuthor() {
-    string authorID;
-    cout << "Enter Author ID: ";
-    cin >> authorID;
-    string project = "*";
-    string columnName = "AuthorID";
-    transform(columnName.begin(), columnName.end(), columnName.begin(), ::tolower);
-    queryProcessor.searchAuthors(project,columnName,authorID);
+//    string authorID;
+//    cout << "Enter Author ID: ";
+//    cin >> authorID;
+//    string project = "*";
+//    string columnName = "AuthorID";
+//    transform(columnName.begin(), columnName.end(), columnName.begin(), ::tolower);
+//    queryProcessor.searchAuthors(project,columnName,authorID);
 }
 void LibraryInterface::handlePrintBook() {
-    string ISBN;
-    cout << "Enter ISBN: ";
-    cin >> ISBN;
-    string project = "*";
-    string columnName = "ISBN";
-    transform(columnName.begin(), columnName.end(), columnName.begin(), ::tolower);
-    queryProcessor.searchBooks(project,columnName,ISBN);
+//    string ISBN;
+//    cout << "Enter ISBN: ";
+//    cin >> ISBN;
+//    string project = "*";
+//    string columnName = "ISBN";
+//    transform(columnName.begin(), columnName.end(), columnName.begin(), ::tolower);
+//    queryProcessor.searchBooks(project,columnName,ISBN);
 
 }
 
 LibraryInterface::LibraryInterface() {
-    AvailListAuthor = fileSystemClass.readAvailFromFile("Authors.txt");
-    AvailListBook = fileSystemClass.readAvailFromFile("Books.txt");
-    AuthorPK = indexSystem.LoadIndexFile("Authors.txt");
-    BookPK = indexSystem.LoadIndexFile("Books.txt");
+    AvailListAuthor = availSystem.readAvailFromFile("AVAILAuthors.txt");
+    AvailListBook = availSystem.readAvailFromFile("AVAILBooks.txt");
+    AuthorPK = primaryIndex.LoadIndexFile("Authors.txt");
+    BookPK = primaryIndex.LoadIndexFile("Books.txt");
 }
 
 LibraryInterface::~LibraryInterface() {
-    indexSystem.uploadIndexFile(AuthorPK,"Authors.txt");
-    indexSystem.uploadIndexFile(BookPK,"Books.txt");
-    fileSystemClass.writeAvailToFile(AvailListBook,"AVAILBook.txt");
-    fileSystemClass.writeAvailToFile(AvailListAuthor,"AVAILAuthor.txt");
+   primaryIndex.uploadIndexFile(AuthorPK,"Authors.txt");
+    primaryIndex.uploadIndexFile(BookPK,"Books.txt");
+    availSystem.writeAvailToFile(AvailListBook,"AVAILBook.txt");
+    availSystem.writeAvailToFile(AvailListAuthor,"AVAILAuthor.txt");
 
 }
