@@ -42,6 +42,12 @@ vector<pair<int, LinkedList<string>*>> SecondaryIndex::loadLinkedListFile(string
         string RNN, PKValue, NextValue;
         RNN = Data[0];
         int firstValue = stoi(RNN);
+        if(line[20] == '#'){
+            LinkedList<string>* linkedList = new LinkedList<string>();
+            linkedList->insertAtTail(Data[1], true, RNN);
+            data.push_back({firstValue, linkedList});
+            continue;
+        }
 
         PKValue = Data[1];
         LinkedList<string>* linkedList = new LinkedList<string>();
