@@ -11,8 +11,9 @@ class SLLNode {
 public:
     T data;
     SLLNode* next;
-    SLLNode(T element) ;
-    bool markedForDeletion;
+    SLLNode(T element,bool marked,string Rnum);
+    bool markedForDeletion= false;
+    string recordNum;
 };
 
 template <class T>
@@ -22,19 +23,8 @@ public:
     SLLNode<T> *tail;
     int size;
     LinkedList();
-    void insertAtHead(T element) ;
-    void insertAtTail(T element) ;
-    void insertAt(T element, int index);
-    void removeAtTail();
-    void removeAt(int index) ;
-    T retrieveAt(int index) ;
-    void replaceAt(T newElement, int index);
-    bool isExist(T element);
-    bool isItemAtEqual(T element, int index);
-    void swap( int firstItemIdx, int secondItemIdx);
-    bool isEmpty();
-    int linkedListSize();
-    void clear();
+    void insertAtHead(T element ,bool marked,string Rnum) ;
+    void insertAtTail(T element,bool marked,string Rnum) ;
     void print();
     T removeAtHead();
     void markDeleted(int index);

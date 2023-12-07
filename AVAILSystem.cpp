@@ -9,7 +9,7 @@ LinkedList<string> AVAILSystem:: readAvailFromFile(string fileName) {
     }
     string line;
     while (getline(file, line)) {
-        availList.insertAtTail(line);
+        availList.insertAtTail(line,false,"");
     }
     file.close();
     return availList;

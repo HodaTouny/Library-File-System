@@ -1,11 +1,13 @@
 #include <iostream>
 #include <vector>
 #include "Interface.h"
-#include "QueryProcessor.h"
+#include "SecondaryIndex.h"
 
 using namespace std;
 
 int main() {
+    SecondaryIndex x;
+
 
     return 0;
 }

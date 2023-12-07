@@ -32,6 +32,7 @@ void PrimaryIndex::uploadIndexFile(vector<pair<string, int>>& FileIndex, const s
     }
     indexFile.close();
 }
+
 void PrimaryIndex:: deleteFromIndex(vector<pair<string, int>>& fileIndex, string targetString) {
     auto it = remove_if(fileIndex.begin(), fileIndex.end(),
                         [targetString](const pair<string, int>& element) {

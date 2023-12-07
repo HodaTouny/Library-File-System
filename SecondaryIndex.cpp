@@ -18,8 +18,7 @@ void deleteFromSecondaryIndex(vector<pair<string, int>>& fileIndex,vector<pair<i
     }
 }
 
-
-vector<pair<int, LinkedList<string>*>>SecondaryIndex:: loadLinkedListFile(string fileName) {
+vector<pair<int, LinkedList<string>*>> SecondaryIndex::loadLinkedListFile(string fileName) {
     vector<pair<int, LinkedList<string>*>> data;
     fstream file(fileName, ios::in | ios::out);
     if (!file.is_open()) {
@@ -46,7 +45,7 @@ vector<pair<int, LinkedList<string>*>>SecondaryIndex:: loadLinkedListFile(string
 
         PKValue = Data[1];
         LinkedList<string>* linkedList = new LinkedList<string>();
-        linkedList->insertAtTail(PKValue);
+        linkedList->insertAtTail(PKValue,false, to_string(firstValue));
 
         NextValue = Data[2];
         int thirdValue = stoi(NextValue);
@@ -74,15 +73,19 @@ void SecondaryIndex:: processLinkedList(fstream& file, LinkedList<string>* linke
     getline(file, line);
     removeUnderscores(line);
     vector<string> Data = parseString(line);
-    string PKValue, NextValue;
+    string PKValue, NextValue,Rnn;
     if (Data.size() >= 3) {
+        Rnn = Data[0];
         PKValue = Data[1];
-        linkedList->insertAtTail(PKValue);
+        linkedList->insertAtTail(PKValue, false,Rnn);
         NextValue = Data[2];
         int newThirdValue = stoi(NextValue);
         processLinkedList(file, linkedList, newThirdValue);
     }
 }
+
+
+
 
 void SecondaryIndex:: addRecordToSecondaryIndex(string data[], string SKfile, string SKlistfile, vector<pair<string, int>>& myfile) {
     ofstream outFile(SKfile, ios::app);
