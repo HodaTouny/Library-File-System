@@ -5,6 +5,7 @@ template <class T>
 SLLNode<T>::SLLNode(T element) {
     data = element;
     next = nullptr;
+    markedForDeletion = false;
 }
 
 template <class T>
@@ -131,6 +132,23 @@ void LinkedList<T>:: removeAt(int index) {
     size--;
 }
 template <class T>
+void LinkedList<T>::markDeleted(int index) {
+    if (index < 0 || index >= size) {
+        cout << "Index out of range!!!" << endl;
+        return;
+    }
+
+    SLLNode<T>* curr = head;
+    for (int i = 0; i < index; i++) {
+        curr = curr->next;
+    }
+
+    if (curr != nullptr) {
+        curr->markedForDeletion = true;
+    }
+}
+
+template <class T>
 void LinkedList<T>::removeNodeWithValue(T value) {
     SLLNode<T> *current = head;
     SLLNode<T> *prev = nullptr;
@@ -247,15 +265,16 @@ void LinkedList<T>:: clear() {
     }
 
 }
-//template <class T>
-//void LinkedList<T>:: print() {
-//    SLLNode<T> *temp=head;
-//    while (temp!=NULL) {
-//        cout<<temp->data << " ";
-//        temp=temp->next;
-//    }
-//    cout << endl;
-//}
+template <class T>
+void LinkedList<T>::print()  {
+    SLLNode<T>* temp = head;
+    while (temp != nullptr) {
+        cout << temp->data << " " <<temp->markedForDeletion << " ";
+        temp = temp->next;
+    }
+    cout << endl;
+}
+
 template <class T>
 T * LinkedList<T>::getNextNodeDataPtr(){
     if (head == nullptr || head->next == nullptr) {
@@ -263,6 +282,33 @@ T * LinkedList<T>::getNextNodeDataPtr(){
     }
 
     return &(head->next->data);
+}
+template <class T>
+bool LinkedList<T>::isNullPointer(int index) const {
+    if (index < 0 || index >= size) {
+        cout << "Index out of range";
+        return false;
+    }
+
+    SLLNode<T>* curr = head;
+    for (int i = 0; i < index; i++) {
+        curr = curr->next;
+    }
+
+    return curr->next == nullptr;
+}
+template <class T>
+int LinkedList<T>::indexOf(T element) {
+    SLLNode<T>* curr = head;
+    int index = 0;
+    while (curr != nullptr) {
+        if (curr->data == element) {
+            return index;
+        }
+        curr = curr->next;
+        index++;
+    }
+    return -1;
 }
 
 template <class T>

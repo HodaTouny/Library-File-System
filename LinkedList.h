@@ -12,6 +12,7 @@ public:
     T data;
     SLLNode* next;
     SLLNode(T element) ;
+    bool markedForDeletion;
 };
 
 template <class T>
@@ -34,19 +35,14 @@ public:
     bool isEmpty();
     int linkedListSize();
     void clear();
-    //void print();
-    void print() const {
-        SLLNode<T> *current = head;
-        while (current != nullptr) {
-            cout << current->data << " ";
-            current = current->next;
-        }
-    }
+    void print();
     T removeAtHead();
+    void markDeleted(int index);
+    int indexOf(T element);
     T * getNextNodeDataPtr();
     void removeNodeWithValue(T value);
     ~LinkedList();
-
+    bool isNullPointer(int index) const;
 
 };
 
