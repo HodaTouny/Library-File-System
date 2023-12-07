@@ -18,6 +18,29 @@ void deleteFromSecondaryIndex(vector<pair<string, int>>& fileIndex,vector<pair<i
     }
 }
 
+
+void SecondaryIndex:: processLinkedList(fstream& file, LinkedList<string>* linkedList, int thirdValue) {
+    if (thirdValue == -1) {
+        return;
+    }
+    int offset = calculateFixedOffset(thirdValue);
+    file.seekg(offset, ios::beg);
+    file<<'#';
+    string line;
+    getline(file, line);
+    removeUnderscores(line);
+    vector<string> Data = parseString(line);
+    string PKValue, NextValue,Rnn;
+    if (Data.size() >= 3) {
+        Rnn = Data[0];
+        PKValue = Data[1];
+        linkedList->insertAtTail(PKValue, false,Rnn);
+        NextValue = Data[2];
+        int newThirdValue = stoi(NextValue);
+        processLinkedList(file, linkedList, newThirdValue);
+    }
+}
+
 vector<pair<int, LinkedList<string>*>> SecondaryIndex::loadLinkedListFile(string fileName) {
     vector<pair<int, LinkedList<string>*>> data;
     fstream file(fileName, ios::in | ios::out);
@@ -68,67 +91,109 @@ vector<pair<int, LinkedList<string>*>> SecondaryIndex::loadLinkedListFile(string
     return data;
 }
 
-void SecondaryIndex:: processLinkedList(fstream& file, LinkedList<string>* linkedList, int thirdValue) {
-    if (thirdValue == -1) {
-        return;
-    }
-    int offset = calculateFixedOffset(thirdValue);
-    file.seekg(offset, ios::beg);
-    file<<'#';
-    string line;
-    getline(file, line);
-    removeUnderscores(line);
-    vector<string> Data = parseString(line);
-    string PKValue, NextValue,Rnn;
-    if (Data.size() >= 3) {
-        Rnn = Data[0];
-        PKValue = Data[1];
-        linkedList->insertAtTail(PKValue, false,Rnn);
-        NextValue = Data[2];
-        int newThirdValue = stoi(NextValue);
-        processLinkedList(file, linkedList, newThirdValue);
-    }
-}
-
-
-
-
-void SecondaryIndex:: addRecordToSecondaryIndex(string data[], string SKfile, string SKlistfile, vector<pair<string, int>>& myfile) {
-    ofstream outFile(SKfile, ios::app);
-    ofstream outFile2(SKlistfile, ios::app);
+void SecondaryIndex:: addRecordToSecondaryIndex(vector<pair<string, int>>& fileIndex,vector<pair<int,
+        LinkedList<string>*>>& secondaryIndex ,string data[],int num){
     bool found = false;
     int rnn;
-    for (const auto& entry : myfile) {
-        if (data[2] == entry.first) {
+    for (const auto& entry : fileIndex) {
+        if (entry.first == data[2]) {
             found = true;
-            rnn=entry.second;
+            rnn = entry.second;
             break;
         }
     }
-
-    string firstSkValue = extractHeader(SKlistfile);
     if (found) {
-        int offset = calculateFixedOffset(rnn);
-        int lastValue = getValueAfterLastDelimiter(SKlistfile, offset);
-        if (lastValue == -1) {
-            updateLastValue(SKlistfile, offset);
-        } else {
-            while (lastValue != -1) {
-                int newOffset = calculateFixedOffset(lastValue);
-                lastValue = getValueAfterLastDelimiter(SKlistfile, newOffset);
-                if (lastValue == -1) {
-                    updateLastValue(SKlistfile, newOffset);
-                }
+        for (auto& secondaryEntry : secondaryIndex) {
+            if (secondaryEntry.first == rnn) {
+                secondaryEntry.second->insertAtTail(data[0],false, to_string(rnn));
+                num++;
+                break;
+
             }
         }
-        outFile2 << writer(3, firstSkValue) << "|" << writer(15, data[0]) << "|" << writer(3, "-1") << endl;
-        writeHeader(SKlistfile);
-
     } else {
-        outFile << data[2] << "|"<< firstSkValue << endl;
-        outFile.close();
-        outFile2 << writer(3,firstSkValue) << "|"  << writer(15,data[0]) << "|"<< writer(3,"-1") << endl;
-        writeHeader(SKlistfile);
+        LinkedList<string>* newLinkedList = new LinkedList<string>();
+        newLinkedList->insertAtTail(data[0], false, to_string(num));
+        secondaryIndex.push_back({ ++num, newLinkedList });
     }
 }
+//void SecondaryIndex:: addRecordToSecondaryIndex(string data[], string SKfile, string SKlistfile, vector<pair<string, int>>& myfile) {
+//    ofstream outFile(SKfile, ios::app);
+//    ofstream outFile2(SKlistfile, ios::app);
+//    bool found = false;
+//    int rnn;
+//    for (const auto& entry : myfile) {
+//        if (data[2] == entry.first) {
+//            found = true;
+//            rnn=entry.second;
+//            break;
+//        }
+//    }
+//
+//    string firstSkValue = extractHeader(SKlistfile);
+//    if (found) {
+//        int offset = calculateFixedOffset(rnn);
+//        int lastValue = getValueAfterLastDelimiter(SKlistfile, offset);
+//        if (lastValue == -1) {
+//            updateLastValue(SKlistfile, offset);
+//        } else {
+//            while (lastValue != -1) {
+//                int newOffset = calculateFixedOffset(lastValue);
+//                lastValue = getValueAfterLastDelimiter(SKlistfile, newOffset);
+//                if (lastValue == -1) {
+//                    updateLastValue(SKlistfile, newOffset);
+//                }
+//            }
+//        }
+//        outFile2 << writer(3, firstSkValue) << "|" << writer(15, data[0]) << "|" << writer(3, "-1") << endl;
+//        writeHeader(SKlistfile);
+//
+//    } else {
+//        outFile << data[2] << "|"<< firstSkValue << endl;
+//        outFile.close();
+//        outFile2 << writer(3,firstSkValue) << "|"  << writer(15,data[0]) << "|"<< writer(3,"-1") << endl;
+//        writeHeader(SKlistfile);
+//    }
+
+//////////////////////////
+//void addSecondaryIndex(string data[], const string& SKfile, const string& SKlistfile) {
+//    ofstream outFile(SKfile, ios::app);
+//    ofstream outFile2(SKlistfile, ios::app);
+//    vector<pair<string, int>> myfile = LoadIndexFile(SKfile);
+//    bool found = false;
+//    int rnn;
+//    for (const auto& entry : myfile) {
+//        if (data[2] == entry.first) {
+//            found = true;
+//            rnn=entry.second;
+//            break;
+//        }
+//    }
+//
+//    string firstSkValue = extractHeader(SKlistfile);
+//    if (found) {
+//        int offset = calculateOffset(rnn);
+//        int lastValue = getValueAfterLastDelimiter(SKlistfile, offset);
+//        if (lastValue == -1) {
+//            updateLastValue(SKlistfile, offset);
+//        } else {
+//            while (lastValue != -1) {
+//                //cout<<"hello maya";
+//                int newOffset = calculateOffset(lastValue);
+//                lastValue = getValueAfterLastDelimiter(SKlistfile, newOffset);
+//                if (lastValue == -1) {
+//                    updateLastValue(SKlistfile, newOffset);
+//                }
+//            }
+//        }
+//        outFile2 << writer(3, firstSkValue) << "|" << writer(15, data[0]) << "|" << writer(3, "-1") << endl;
+//        writeHeader(SKlistfile);
+//
+//    } else {
+//        outFile << data[2] << "|"<< firstSkValue << endl;
+//        outFile.close();
+//        outFile2 << writer(3,firstSkValue) << "|"  << writer(15,data[0]) << "|"<< writer(3,"-1") << endl;
+//        writeHeader(SKlistfile);
+//    }
+
 
