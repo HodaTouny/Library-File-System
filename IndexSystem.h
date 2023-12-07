@@ -435,6 +435,7 @@ public:
         if (file.is_open()) {
             file.seekp(0,ios::beg);
             file << paddedNumStr << "\n";
+
         }
     }
 };

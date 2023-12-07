@@ -375,8 +375,10 @@ public:
             originalRecord.erase(originalRecord.begin());
             deleteRecord(offset, fileName);
              appendToFile(originalRecord.data(),originalRecord.size(),fileName);
+
         }
     }
+
 
 
 
