@@ -10,10 +10,11 @@ public:
     vector<pair<int, LinkedList<string>*>> loadLinkedListFile(string fileName);
     void processLinkedList(fstream& file, LinkedList<string>* linkedList, int thirdValue);
     vector<string> loadRecord(int offset,string fileName);
-    void addRecordToSecondaryIndex(vector<pair<string, int>>& fileIndex,vector<pair<int,
+   bool addRecordToSecondaryIndex(vector<pair<string, int>>& fileIndex,vector<pair<int,
             LinkedList<string>*>>& secondaryIndex ,string data[],int &num);
-    void forPush();
-
+    void writeToFile(const vector<pair<string, int>>& fileIndex,
+                     const vector<pair<int, LinkedList<string>*>>& secondaryIndex,
+                     const string& file1, const string& file2) ;
 };
 
 

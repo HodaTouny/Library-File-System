@@ -11,8 +11,9 @@ public:
     vector<pair<string,int>>LoadIndexFile(string filename);
 
     void uploadIndexFile(vector<pair<string, int>>& FileIndex, const string& filename);
-    int previousRecordSize(string filename);
+    int previousRecordSize(string filename,int offset);
 
+    int previousRecordSize(string filename);
 };
 
 

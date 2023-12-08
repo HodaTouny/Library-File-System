@@ -11,7 +11,7 @@ void QueryProcessor::processQuery(string query,vector<pair<string,int>>authorPK,
                                   vector<pair<string,int>>bookPK,vector<pair<string,int>>authorSKFirst,
                                   vector<pair<int,LinkedList<string>*>>authorSKSecond,
                                   vector<pair<string,int>>bookSKFirst,vector<pair<int,
-                                          LinkedList<string>*>>bookSKSecond) {
+        LinkedList<string>*>>bookSKSecond) {
     if (query.empty()) {
         cout << "Query is empty." << endl;
         return;

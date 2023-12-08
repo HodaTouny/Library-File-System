@@ -179,65 +179,19 @@ void LibraryInterface::handleAddBook() {
 
 void LibraryInterface::handleUpdateBookTitle() {
 
-    cout << "Book ID of Book To Update: ";
-    cin.ignore();
-    getline(cin, ISBN);
-    do {
-        cout << "New Book Title (up to 30 characters): ";
-        getline(cin, Book_Title);
-        if (Book_Title.length() > 30) {
-            cout << "Error: Book name should not exceed 30 characters. Please re-enter." << endl;
-        }
-    } while (Book_Title.length() > 30);
-
-    int offset = indexHelper.binarySearchInt(BookPK,ISBN);
-    cout<<"\n"<<offset<<"\n";
-    entityFiles.updateRecord(offset,Book_Title,"Books.txt",AvailListBook);
-
 }
 
 void LibraryInterface::handleUpdateAuthorName() {
-    cout << "Author ID To Update his name : ";
-    cin.ignore();
-    getline(cin, Author_ID);
-
-    do {
-        cout << "New Author Name (up to 30 characters): ";
-
-        getline(cin, Author_Name);
-        if (Author_Name.length() > 30) {
-            cout << "Error: Book name should not exceed 30 characters. Please re-enter." << endl;
-        }
-    } while (Author_Name.length() > 30);
-
-    int offset = indexHelper.binarySearchInt(AuthorPK,Author_ID);
-    entityFiles.updateRecord(offset,Author_Name,"Authors.txt",AvailListAuthor);
 
 }
 
 void LibraryInterface::handleDeleteBook() {
-    cout << "Book ID to delete: ";
-    cin.ignore();
-    getline(cin, ISBN);
-    int offset = indexHelper.binarySearchInt(BookPK,ISBN);
-    string data = entityFiles.deleteRecord(offset,"Books.txt");
-    AvailListBook.insertAtTail(data, false,"");
-    primaryIndex.deleteFromIndex(BookPK,ISBN);
-    //secondaryIndex.deleteFromSecondaryIndex(BookSKFirst,BookSKSecond,);
 
 }
 
 
 
 void LibraryInterface::handleDeleteAuthor() {
-    cout << "Author ID to delete: ";
-    cin.ignore();
-    getline(cin, Author_ID);
-    int offset = indexHelper.binarySearchInt(AuthorPK,Author_ID);
-    string data = entityFiles.deleteRecord(offset,"Authors.txt");
-    AvailListBook.insertAtTail(data, false,"");
-    primaryIndex.deleteFromIndex(AuthorPK,Author_ID);
-    //secondaryIndex.deleteFromSecondaryIndex(BookSKFirst,BookSKSecond,);
 
 }
 
@@ -272,9 +226,7 @@ void LibraryInterface::handlePrintBook() {
 //    queryProcessor.searchBooks(project,columnName,ISBN);
 
 }
-
-
-
+//
 LibraryInterface::LibraryInterface() {
     AvailListAuthor = availSystem.readAvailFromFile("AVAILAuthors.txt");
     AvailListBook = availSystem.readAvailFromFile("AVAILBook.txt");
@@ -287,12 +239,12 @@ LibraryInterface::LibraryInterface() {
     Authorsheader = stoi(indexHelper.extractHeader("AuthorsSKSecond.txt"));
     Booksheader = stoi(indexHelper.extractHeader("BookSKSecond.txt"));
 }
-//
+
 LibraryInterface::~LibraryInterface() {
     primaryIndex.uploadIndexFile(AuthorPK,"AuthorPK.txt");
     primaryIndex.uploadIndexFile(BookPK,"BookPK.txt");
     availSystem.writeAvailToFile(AvailListBook,"AVAILBook.txt");
     availSystem.writeAvailToFile(AvailListAuthor,"AVAILAuthor.txt");
-
-
+    secondaryIndex.writeToFile(AuthorSKFirst,AuthorSKSecond,"AuthorsSKFirst.txt","AuthorsSKSecond.txt");
+    secondaryIndex.writeToFile(BookSKFirst,BookSKSecond,"BookSKFirst.txt","BookSKSecond");
 }

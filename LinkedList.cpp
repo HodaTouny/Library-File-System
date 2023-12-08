@@ -5,7 +5,7 @@ SLLNode<T>::SLLNode(T element,bool marked,string Rnum) {
     data = element;
     next = nullptr;
     markedForDeletion = marked;
-    recordNum="";
+    recordNum=Rnum;
 }
 
 template <class T>
@@ -64,9 +64,25 @@ T LinkedList<T>::removeAtHead() {
     return removedData;
 }
 
+template <class T>
+std::string LinkedList<T>::getRecordNum(SLLNode<T>* currentNode) const {
+    if (currentNode == nullptr) {
+        return "";
+    }
+    return currentNode->recordNum;
+}
+template <class T>
+SLLNode<T>* LinkedList<T>::getHead() const {
+    return head;
+}
 
-
-
+template <class T>
+SLLNode<T>* LinkedList<T>::getNext(SLLNode<T>* currentNode) const {
+    if (currentNode == nullptr) {
+        return nullptr;
+    }
+    return currentNode->next;
+}
 template <class T>
 void LinkedList<T>::markDeleted(int index) {
     if (index < 0 || index >= size) {

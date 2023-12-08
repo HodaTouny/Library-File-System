@@ -31,10 +31,15 @@ public:
     int indexOf(T element);
     T * getNextNodeDataPtr();
     void removeNodeWithValue(T value);
-    SLLNode<T> * getNode(int index);
-
     ~LinkedList();
 
+    string getRecordNum(SLLNode<T> *currentNode) const;
+
+    SLLNode<T> *getHead() const;
+
+    SLLNode<T> *getNext(SLLNode<T> *currentNode) const;
+
+    SLLNode<T> *getNode(int index);
 };
 
 

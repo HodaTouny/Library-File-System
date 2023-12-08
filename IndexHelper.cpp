@@ -145,6 +145,13 @@ bool IndexHelper:: binarySearch( vector<pair<string, int>>& fileIndex, string& t
     return false;
 }
 
+void IndexHelper:: sort_Pairs(std::vector<std::pair<int, LinkedList<string>*>> &FileIndex) {
+    std::sort(FileIndex.begin(), FileIndex.end(),
+              [](const std::pair<int, LinkedList<string>*>& a, const std::pair<int, LinkedList<string>*>& b) {
+                  return a.first < b.first;
+              });
+}
+
 
 int IndexHelper:: binarySearchInt(const vector<pair<string, int>>& vec, string key) {
     int left = 0;
