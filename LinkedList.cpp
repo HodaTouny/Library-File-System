@@ -137,7 +137,20 @@ void LinkedList<T>::removeNodeWithValue(T value) {
     delete current;
     size--;
 }
+template <class T>
+SLLNode<T> * LinkedList<T>::getNode(int index) {
+    if (index < 0 || index >= size) {
+        cout << "Index out of range!!!" << endl;
+        return nullptr;
+    }
 
+    SLLNode<T>* curr = head;
+    for (int i = 0; i < index; i++) {
+        curr = curr->next;
+    }
+
+    return curr;
+}
 
 template <class T>
 LinkedList<T>::~LinkedList() {
@@ -148,6 +161,5 @@ LinkedList<T>::~LinkedList() {
     }
     size = 0;
 }
-
 
 template class LinkedList<std::string>;

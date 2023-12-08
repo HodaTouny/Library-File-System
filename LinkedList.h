@@ -31,6 +31,8 @@ public:
     int indexOf(T element);
     T * getNextNodeDataPtr();
     void removeNodeWithValue(T value);
+    SLLNode<T> * getNode(int index);
+
     ~LinkedList();
 
 };

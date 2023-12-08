@@ -196,11 +196,18 @@ void LibraryInterface::handleDeleteAuthor() {
 }
 
 void LibraryInterface::handleWriteQuery() {
+
 //    string query;
 //    cout<<"Enter your query: ";
 //    cin.ignore();
 //    getline(cin,query);
 //    queryProcessor.processQuery(query,AuthorPK,BookPK);
+
+//    string query;
+//    cout<<"Enter your query: ";
+//    cin.ignore();
+//    getline(cin,query);
+//    queryProcessor.processQuery(query,AuthorPK,BookPK,AuthorSKFirst,AuthorSKSecond,BookSKFirst,BookSKSecond);
 }
 void LibraryInterface::handlePrintAuthor() {
 //    string authorID;
@@ -233,6 +240,10 @@ LibraryInterface::LibraryInterface() {
     BookSKSecond = secondaryIndex.loadLinkedListFile("BookSKSecond.txt");
     Authorsheader = stoi(indexHelper.extractHeader("AuthorSKSecond.txt"));
     Booksheader = stoi(indexHelper.extractHeader("BookSKSecond.txt"));
+    AuthorSKFirst=primaryIndex.LoadIndexFile("AuthorSKFirst");
+    AuthorSKSecond=secondaryIndex.loadLinkedListFile("AuthorSKSecond");
+    BookSKFirst=primaryIndex.LoadIndexFile("BookSKFirst.txt");
+    BookSKSecond=secondaryIndex.loadLinkedListFile("BookSKSecond.txt");
 }
 //
 LibraryInterface::~LibraryInterface() {
