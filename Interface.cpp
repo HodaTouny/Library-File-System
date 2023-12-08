@@ -124,7 +124,7 @@ void LibraryInterface::handleAddAuthor() {
         }
     }
     else{
-        cout<<" this user exist!!!";
+        cout<<" this author exist!!!";
     }
 
 
@@ -173,7 +173,7 @@ void LibraryInterface::handleAddBook() {
         }
     }
     else{
-        cout<<" this user exist!!!";
+        cout<<" this book exist!!!";
     }
 }
 
@@ -196,39 +196,29 @@ void LibraryInterface::handleDeleteAuthor() {
 }
 
 void LibraryInterface::handleWriteQuery() {
-            //    string query;
-            //    cout<<"Enter your query: ";
-            //    cin.ignore();
-            //    getline(cin,query);
-            //    queryProcessor.processQuery(query,AuthorPK,BookPK);
-
-//    cout<<"Enter your query: ";
-//    cin.ignore();
-//    getline(cin,query);
-//    queryProcessor.processQuery(query,AuthorPK,BookPK,AuthorSKFirst,AuthorSKSecond,BookSKFirst,BookSKSecond);
+    string query;
+    cout<<"Enter your query: ";
+    cin.ignore();
+    getline(cin,query);
+    queryProcessor.processQuery(query,AuthorPK,BookPK,AuthorSKFirst,AuthorSKSecond,BookSKFirst,BookSKSecond);
 }
 void LibraryInterface::handlePrintAuthor() {
-//    string authorID;
-//    cout << "Enter Author ID: ";
-//    cin >> authorID;
-//    string project = "*";
-//    string columnName = "AuthorID";
-//    transform(columnName.begin(), columnName.end(), columnName.begin(), ::tolower);
-//    queryProcessor.searchAuthors(project,columnName,authorID);
+    string authorID;
+    cout << "Enter Author ID: ";
+    cin >> authorID;
+    string project = "*";
+    string query = "SELECT * FROM Authors WHERE AuthorID = '"+ authorID+"'";
+    queryProcessor.processQuery(query,AuthorPK,BookPK,AuthorSKFirst,AuthorSKSecond,BookSKFirst,BookSKSecond);
 }
 void LibraryInterface::handlePrintBook() {
-//    string ISBN;
-//    cout << "Enter ISBN: ";
-//    cin >> ISBN;
-//    string project = "*";
-//    string columnName = "ISBN";
-//    transform(columnName.begin(), columnName.end(), columnName.begin(), ::tolower);
-//    queryProcessor.searchBooks(project,columnName,ISBN);
-
+    string ISBN;
+    cout << "Enter ISBN: ";
+    cin >> ISBN;
+    string query = "SELECT * FROM Books WHERE ISBN = '"+ ISBN+"'";
+    queryProcessor.processQuery(query,AuthorPK,BookPK,AuthorSKFirst,AuthorSKSecond,BookSKFirst,BookSKSecond);
 }
-//
 LibraryInterface::LibraryInterface() {
-    AvailListAuthor = availSystem.readAvailFromFile("AVAILAuthors.txt");
+    AvailListAuthor = availSystem.readAvailFromFile("AVAILAuthor.txt");
     AvailListBook = availSystem.readAvailFromFile("AVAILBook.txt");
     AuthorPK = primaryIndex.LoadIndexFile("AuthorPK.txt");
     BookPK = primaryIndex.LoadIndexFile("BookPK.txt");

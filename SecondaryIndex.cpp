@@ -1,6 +1,6 @@
 #include "SecondaryIndex.h"
 
-void deleteFromSecondaryIndex(vector<pair<string, int>>& fileIndex,vector<pair<int, LinkedList<string>*>>& secondaryIndex,
+void SecondaryIndex::deleteFromSecondaryIndex(vector<pair<string, int>>& fileIndex,vector<pair<int, LinkedList<string>*>>& secondaryIndex,
                               const string& targetString, const string& targetName) {
     for (int i = 0; i < fileIndex.size(); i++) {
         if (fileIndex[i].first == targetName) {
@@ -132,25 +132,28 @@ void SecondaryIndex:: writeToFile(const vector<pair<string, int>>& fileIndex,
         cerr << "Error opening file: " << file1 << endl;
         return;
     }
-
-    for (const auto &entry: fileIndex) {
-        File1 << entry.first << "|" << entry.second << endl;
-    }
-    File1.close();
-
     fstream File2(file2, ios::out);
     if (!File2.is_open()) {
         cerr << "Error opening file: " << file2 << endl;
         return;
     }
+
+    for (const auto &entry: fileIndex) {
+        File1 << entry.first << "|" << entry.second << endl;
+    }
+    File1.close();
+    string header = writer(5, to_string(secondaryIndex.size()));
+    File2 <<header << endl;
     for (const auto &secondaryEntry: secondaryIndex) {
         LinkedList<string> *linkedList = secondaryEntry.second;
         SLLNode<string> *currentNode = linkedList->getHead();
         while (currentNode != nullptr) {
-            File2 << linkedList->getRecordNum(currentNode) << "|" << currentNode->data;
-
-            if (currentNode->next == nullptr) {
-                File2 << "|-1" << endl;
+            File2 << writer(5, to_string(secondaryEntry.first))<<"|"<<writer(15, currentNode->data);
+            if(currentNode->markedForDeletion==true){
+                File2<< "|#__"<<endl;
+            }
+             if (currentNode->next == nullptr) {
+                File2 << "|-1_" << endl;
             } else {
                 File2 <<"|"<< linkedList->getRecordNum(linkedList->getNext(currentNode)) << endl;
             }

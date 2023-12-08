@@ -114,6 +114,24 @@ void QueryProcessor::searchAuthors(string &project, string columnName,  string &
         } else {
             cout << "Author with AuthorID '" << value << "' not found." << endl;
         }
+    }else if (columnName == "authorname") {
+        int index_1= binarySearch(AuthorSKFirst,value);
+        if (index_1 != -1) {
+            int rnn = AuthorSKFirst[index_1].second;
+            int vecRNN = binarySearch(AuthorSKSecond, rnn);
+            LinkedList<string> *list = AuthorSKSecond[vecRNN].second;
+            for (int i = 0; i < list->size; i++) {
+                string value = list->getNode(i)->data;
+                int index = binarySearch(AuthorPK,value);
+                if(index!=-1){
+                    vector<string> record = entity.loadRecord(AuthorPK[index].second, "Authors.txt");
+                    printAuthorDetails(record, project);
+                }
+            }
+        } else {
+            cout << "Author with AuthorName '" << value << "' not found." << endl;
+            return;
+        }
     }
     else {
         cout << "Unsupported column for Authors: " << columnName << endl;
@@ -139,7 +157,11 @@ void QueryProcessor::searchBooks(string &project,  string &columnName,  string &
             LinkedList<string> *list = BookSKSecond[vecRNN].second;
             for (int i = 0; i < list->size; i++) {
                 string value = list->getNode(i)->data;
-                cout << value << endl;
+                int index = binarySearch(BookPK,value);
+                if(index!=-1){
+                    vector<string> record = entity.loadRecord(BookPK[index].second, "Books.txt");
+                    printBookDetails(record, project);
+               }
             }
         } else {
             cout << "Book with AuthorID '" << value << "' not found." << endl;

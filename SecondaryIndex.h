@@ -6,7 +6,8 @@ using namespace std;
 
 class SecondaryIndex: public IndexHelper{
 public:
-    void deleteFromSecondaryIndex(vector<pair<string, string>>& fileIndex,vector<pair<string, LinkedList<string>*>>& secondaryIndex,const string& targetString, const string& targetName);
+    void deleteFromSecondaryIndex(vector<pair<string, int>>& fileIndex,vector<pair<int, LinkedList<string>*>>& secondaryIndex,
+                                  const string& targetString, const string& targetName);
     vector<pair<int, LinkedList<string>*>> loadLinkedListFile(string fileName);
     void processLinkedList(fstream& file, LinkedList<string>* linkedList, int thirdValue);
     vector<string> loadRecord(int offset,string fileName);
