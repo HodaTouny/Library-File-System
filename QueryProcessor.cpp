@@ -7,7 +7,11 @@
 #include "SecondaryIndex.h"
 EntityFiles entity;
 
-void QueryProcessor::processQuery(string query,vector<pair<string,int>>authorPK,vector<pair<string,int>>bookPK,vector<pair<string,int>>authorSKFirst,vector<pair<int,LinkedList<string>*>>authorSKSecond,vector<pair<string,int>>bookSKFirst,vector<pair<int,LinkedList<string>*>>bookSKSecond) {
+void QueryProcessor::processQuery(string query,vector<pair<string,int>>authorPK,
+                                  vector<pair<string,int>>bookPK,vector<pair<string,int>>authorSKFirst,
+                                  vector<pair<int,LinkedList<string>*>>authorSKSecond,
+                                  vector<pair<string,int>>bookSKFirst,vector<pair<int,
+                                          LinkedList<string>*>>bookSKSecond) {
     if (query.empty()) {
         cout << "Query is empty." << endl;
         return;
@@ -111,16 +115,6 @@ void QueryProcessor::searchAuthors(string &project, string columnName,  string &
             cout << "Author with AuthorID '" << value << "' not found." << endl;
         }
     }
-//    else if (columnName == "authorname") {
-//        int index = binarySearch(AuthorName, value);
-//        if (index != -1) {
-//            int offset = AuthorName[index].second;
-//            vector<string> record = entity.loadRecord(offset, "Authors.txt");
-//            printAuthorDetails(record, project);
-//        } else {
-//            cout << "Author with AuthorName '" << value << "' not found." << endl;
-//        }
-//    }
     else {
         cout << "Unsupported column for Authors: " << columnName << endl;
     }
@@ -146,11 +140,6 @@ void QueryProcessor::searchBooks(string &project,  string &columnName,  string &
             for (int i = 0; i < list->size; i++) {
                 string value = list->getNode(i)->data;
                 cout << value << endl;
-//                int index = binarySearch(BookPK,value);
-//                if(index!=-1){
-//                    vector<string> record = entity.loadRecord(BookPK[index].second, "Books.txt");
-//                    printBookDetails(record, project);
-//                }
             }
         } else {
             cout << "Book with AuthorID '" << value << "' not found." << endl;

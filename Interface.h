@@ -26,6 +26,7 @@ private:
     void handlePrintBook();
     void handleWriteQuery();
 
+
 public:
     LibraryInterface();
     int menu();

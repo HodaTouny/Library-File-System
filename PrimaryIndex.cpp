@@ -41,38 +41,42 @@ void PrimaryIndex:: deleteFromIndex(vector<pair<string, int>>& fileIndex, string
 
     fileIndex.erase(it, fileIndex.end());
 }
-
 bool PrimaryIndex:: insertIntoIndex(vector<pair<string, int>>& FileIndex, string key,string fileName){
     if(binarySearch(FileIndex,key)){
-       return false;
+        return false;
     }
     int LastOffset = fileHelper.extractSecondValueFromFile(fileName);
-    int offS = FileIndex[FileIndex.size()-1].second;
-    int previousSize = previousRecordSize(fileName,offS);
+    int previousSize = previousRecordSize(fileName);
     int offset = calculateVariableLengthOffset(previousSize,LastOffset);
     FileIndex.push_back(pair<string ,int>{key,offset});
     sortPairs(FileIndex);
     fileHelper.updateOffset(offset,fileName);
     return true;
 }
-
-int PrimaryIndex:: previousRecordSize(string filename,int offset){
+int PrimaryIndex:: previousRecordSize(string filename){
     ifstream file(filename);
     if (!file.is_open()) {
-        cerr << "Error opening file." << "\n";
+        cerr << "Error opening file." << std::endl;
         return 1;
     }
-    file.seekg(offset,ios::beg);
-    string Line;
-    getline(file,Line);
-    string firstValue;
-    for(int i=0;i<Line.size();i++){
-        if(Line[i] == '|'){
-            break;
-        }
-        firstValue+=Line[i];
+    string lastLine,firstValue;
+    string currentLine;
+    getline(file,currentLine);
+    while (getline(file, currentLine)) {
+        lastLine = currentLine;
     }
     file.close();
-    return stoi(firstValue);
+    if(lastLine == ""){
+        return 15;
+    }
+    for(int i=0;i<lastLine.size();i++){
+        if(lastLine[i] == '|'){
+            break;
+        }
+        firstValue+=lastLine[i];
+    }
+    file.close();
+    return stoi(firstValue)+2;
 }
+
 

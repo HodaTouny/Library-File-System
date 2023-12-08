@@ -99,7 +99,8 @@ void EntityFiles:: updateRecord(int offset,  string newValue, string fileName,  
     if (originalRecord.size() >= 3) {
         originalRecord[2] = newValue;
         originalRecord.erase(originalRecord.begin());
-        deleteRecord(offset, fileName);
+        string x = deleteRecord(offset, fileName);
+        availList.insertAtTail(x, false,"");
         appendToFile(originalRecord.data(),originalRecord.size(),fileName);
 
     }

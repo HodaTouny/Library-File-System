@@ -145,3 +145,22 @@ bool IndexHelper:: binarySearch( vector<pair<string, int>>& fileIndex, string& t
     return false;
 }
 
+
+int IndexHelper:: binarySearchInt(const vector<pair<string, int>>& vec, string key) {
+    int left = 0;
+    int right = vec.size() - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (vec[mid].first == key) {
+            return vec[mid].second;
+        }
+        else if (vec[mid].first > key) {
+            right = mid - 1;
+        }
+        else {
+            left = mid + 1;
+        }
+    }
+    return -1;
+}
+

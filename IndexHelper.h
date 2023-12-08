@@ -11,7 +11,6 @@ protected:
     FilesHelper fileHelper;
 public:
     void sortPairs(vector<pair<string, int>> &FileIndex);
-
     void updateLastValue(string fileName, int offset);
     void writeHeader(string fileName);
     int calculateFixedOffset(int rnn);
@@ -23,6 +22,8 @@ public:
     bool binarySearch(vector<pair<string, int>> &fileIndex, string &target);
 public:
     string extractHeader(string fileName);
+
+    int binarySearchInt(const vector<pair<string, int>> &vec, string key);
 };
 
 
