@@ -122,7 +122,7 @@ void LibraryInterface::handleAddAuthor() {
             pair.second->print();
             std::cout << std::endl;
         }
-        }
+    }
     else{
         cout<<" this user exist!!!";
     }
@@ -196,14 +196,12 @@ void LibraryInterface::handleDeleteAuthor() {
 }
 
 void LibraryInterface::handleWriteQuery() {
+            //    string query;
+            //    cout<<"Enter your query: ";
+            //    cin.ignore();
+            //    getline(cin,query);
+            //    queryProcessor.processQuery(query,AuthorPK,BookPK);
 
-//    string query;
-//    cout<<"Enter your query: ";
-//    cin.ignore();
-//    getline(cin,query);
-//    queryProcessor.processQuery(query,AuthorPK,BookPK);
-
-//    string query;
 //    cout<<"Enter your query: ";
 //    cin.ignore();
 //    getline(cin,query);
@@ -234,16 +232,12 @@ LibraryInterface::LibraryInterface() {
     AvailListBook = availSystem.readAvailFromFile("AVAILBook.txt");
     AuthorPK = primaryIndex.LoadIndexFile("AuthorPK.txt");
     BookPK = primaryIndex.LoadIndexFile("BookPK.txt");
-    AuthorSKFirst = primaryIndex.LoadIndexFile("AuthorSKFirst.txt");
+    AuthorSKFirst = primaryIndex.LoadIndexFile("AuthorsSKFirst.txt");
     BookSKFirst = primaryIndex.LoadIndexFile("BookSKFirst.txt");
-    AuthorSKSecond = secondaryIndex.loadLinkedListFile("AuthorSKSecond.txt");
+    AuthorSKSecond = secondaryIndex.loadLinkedListFile("AuthorsSKSecond.txt");
     BookSKSecond = secondaryIndex.loadLinkedListFile("BookSKSecond.txt");
-    Authorsheader = stoi(indexHelper.extractHeader("AuthorSKSecond.txt"));
+    Authorsheader = stoi(indexHelper.extractHeader("AuthorsSKSecond.txt"));
     Booksheader = stoi(indexHelper.extractHeader("BookSKSecond.txt"));
-    AuthorSKFirst=primaryIndex.LoadIndexFile("AuthorSKFirst");
-    AuthorSKSecond=secondaryIndex.loadLinkedListFile("AuthorSKSecond");
-    BookSKFirst=primaryIndex.LoadIndexFile("BookSKFirst.txt");
-    BookSKSecond=secondaryIndex.loadLinkedListFile("BookSKSecond.txt");
 }
 //
 LibraryInterface::~LibraryInterface() {

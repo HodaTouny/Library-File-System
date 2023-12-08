@@ -11,18 +11,11 @@ private:
     vector<pair<string,int>>AuthorPK;
     vector<pair<string,int>>BookPK;
     vector<pair<string,int>>AuthorSKFirst;
-<<<<<<< HEAD
     vector<pair<string,int>>BookSKFirst;
     vector<pair<int, LinkedList<string>*>>  AuthorSKSecond;
     vector<pair<int, LinkedList<string>*>> BookSKSecond;
     int Authorsheader;
     int Booksheader;
-
-=======
-    vector<pair<int,LinkedList<string>*>>AuthorSKSecond;
-    vector<pair<string,int>>BookSKFirst;
-    vector<pair<int,LinkedList<string>*>>BookSKSecond;
->>>>>>> 4b0f23ef48c179d38044e1bddf37fd63d8d6359e
     void handleAddAuthor();
     void handleAddBook();
     void handleUpdateAuthorName();
