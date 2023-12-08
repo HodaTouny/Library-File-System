@@ -9,7 +9,7 @@ class  IndexHelper {
 protected:
     EntityFiles fileSystem;
     FilesHelper fileHelper;
-protected:
+public:
     void sortPairs(vector<pair<string, int>> &FileIndex);
 
     void updateLastValue(string fileName, int offset);
@@ -20,7 +20,7 @@ protected:
     vector<string> parseString(const string& inputString);
     int getValueAfterLastDelimiter(const string& filePath, int offset);
     int calculateVariableLengthOffset(int previousRecordSize,int LastOffset);
-
+    bool binarySearch(vector<pair<string, int>> &fileIndex, string &target);
 public:
     string extractHeader(string fileName);
 };

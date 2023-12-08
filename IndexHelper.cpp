@@ -124,3 +124,24 @@ vector<string> IndexHelper::parseString(const string& inputString) {
     return result;
 }
 
+
+bool IndexHelper:: binarySearch( vector<pair<string, int>>& fileIndex, string& target) {
+
+    int low = 0;
+    int high = fileIndex.size() - 1;
+
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+
+        if (fileIndex[mid].first == target) {
+            return true;
+        } else if (fileIndex[mid].first < target) {
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+
+    return false;
+}
+
