@@ -71,7 +71,6 @@ vector<pair<int, LinkedList<string>*>> SecondaryIndex::loadLinkedListFile(string
             data.push_back({firstValue, linkedList});
             continue;
         }
-
         PKValue = Data[1];
         LinkedList<string>* linkedList = new LinkedList<string>();
         linkedList->insertAtTail(PKValue,false, to_string(firstValue));
@@ -92,7 +91,7 @@ vector<pair<int, LinkedList<string>*>> SecondaryIndex::loadLinkedListFile(string
 }
 
 void SecondaryIndex:: addRecordToSecondaryIndex(vector<pair<string, int>>& fileIndex,vector<pair<int,
-        LinkedList<string>*>>& secondaryIndex ,string data[],int num){
+        LinkedList<string>*>>& secondaryIndex ,string data[],int& num){
     bool found = false;
     int rnn;
     for (const auto& entry : fileIndex) {
@@ -102,6 +101,7 @@ void SecondaryIndex:: addRecordToSecondaryIndex(vector<pair<string, int>>& fileI
             break;
         }
     }
+    cout<<"ANF"<<found<<"\n";
     if (found) {
         for (auto& secondaryEntry : secondaryIndex) {
             if (secondaryEntry.first == rnn) {
@@ -113,8 +113,9 @@ void SecondaryIndex:: addRecordToSecondaryIndex(vector<pair<string, int>>& fileI
         }
     } else {
         LinkedList<string>* newLinkedList = new LinkedList<string>();
+        fileIndex.push_back({data[2], num});
         newLinkedList->insertAtTail(data[0], false, to_string(num));
-        secondaryIndex.push_back({ ++num, newLinkedList });
+        secondaryIndex.push_back({ num++, newLinkedList });
     }
 }
 //void SecondaryIndex:: addRecordToSecondaryIndex(string data[], string SKfile, string SKlistfile, vector<pair<string, int>>& myfile) {

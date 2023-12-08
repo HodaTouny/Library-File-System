@@ -11,7 +11,7 @@ protected:
     FilesHelper fileHelper;
 protected:
     void sortPairs(vector<pair<string, int>> &FileIndex);
-    string extractHeader(string fileName);
+
     void updateLastValue(string fileName, int offset);
     void writeHeader(string fileName);
     int calculateFixedOffset(int rnn);
@@ -21,6 +21,8 @@ protected:
     int getValueAfterLastDelimiter(const string& filePath, int offset);
     int calculateVariableLengthOffset(int previousRecordSize,int LastOffset);
 
+public:
+    string extractHeader(string fileName);
 };
 
 

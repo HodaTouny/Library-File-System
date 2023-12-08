@@ -76,7 +76,6 @@ void IndexHelper:: writeHeader(string fileName) {
 int IndexHelper:: calculateFixedOffset(int rnn) {
     return 5 + (rnn * 23) + (rnn *2) + 2;
 }
-
 int IndexHelper:: calculateVariableLengthOffset(int previousRecordSize,int LastOffset){
     return LastOffset + previousRecordSize + 2;
 }

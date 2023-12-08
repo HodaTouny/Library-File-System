@@ -1,10 +1,14 @@
 #include <iostream>
 #include <vector>
 #include "PrimaryIndex.h"
+#include "SecondaryIndex.h"
+#include "Interface.h"
 using namespace std;
 
 int main() {
-    PrimaryIndex x;
-    cout<<x.previousRecordSize("Books.txt");
+   LibraryInterface c;
+   c.menu();
+
     return 0;
 }
+

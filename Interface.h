@@ -10,6 +10,13 @@ private:
     LinkedList<string>AvailListBook;
     vector<pair<string,int>>AuthorPK;
     vector<pair<string,int>>BookPK;
+    vector<pair<string,int>>AuthorSKFirst;
+    vector<pair<string,int>>BookSKFirst;
+    vector<pair<int, LinkedList<string>*>>  AuthorSKSecond;
+    vector<pair<int, LinkedList<string>*>> BookSKSecond;
+    int Authorsheader;
+    int Booksheader;
+
     void handleAddAuthor();
     void handleAddBook();
     void handleUpdateAuthorName();
