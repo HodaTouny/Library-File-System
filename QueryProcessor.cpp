@@ -19,6 +19,8 @@ void QueryProcessor::processQuery(string query,vector<pair<string,int>>authorPK,
     AuthorPK= authorPK;
     BookPK= bookPK;
     BookSKFirst=bookSKFirst;
+    AuthorSKFirst= authorSKFirst;
+    AuthorSKSecond=authorSKSecond;
     BookSKSecond=bookSKSecond;
 
     string command, project,tableName, columnName, value;
@@ -161,7 +163,7 @@ void QueryProcessor::searchBooks(string &project,  string &columnName,  string &
                 if(index!=-1){
                     vector<string> record = entity.loadRecord(BookPK[index].second, "Books.txt");
                     printBookDetails(record, project);
-               }
+                }
             }
         } else {
             cout << "Book with AuthorID '" << value << "' not found." << endl;
@@ -177,11 +179,9 @@ void QueryProcessor::searchBooks(string &project,  string &columnName,  string &
 
 int QueryProcessor::binarySearch(const vector<pair<string, int>> arr, const string key) {
     int left = 0;
-    int right = arr.size() - 1;
-
+    int right = arr.size()-1;
     while (left <= right) {
         int mid = left + (right - left) / 2;
-
         if (arr[mid].first == key) {
             return mid;
         } else if (arr[mid].first < key) {
@@ -195,10 +195,8 @@ int QueryProcessor::binarySearch(const vector<pair<string, int>> arr, const stri
 int QueryProcessor::binarySearch(const vector<pair<int, LinkedList<string>*>> arr, const int key) {
     int left = 0;
     int right = arr.size() - 1;
-
     while (left <= right) {
         int mid = left + (right - left) / 2;
-
         if (arr[mid].first == key) {
             return mid;
         } else if (arr[mid].first < key) {
@@ -238,8 +236,8 @@ void QueryProcessor::printAuthorDetails(vector<string> &record, string project) 
     project.erase(remove_if(project.begin(), project.end(), ::isspace), project.end());
     if (project == "all" || project == "*") {
         cout << "Author ID: " << record[1] << endl;
-        cout << "Author Name: " << record[2] << endl;
-        cout << "Author Address: " << record[3] << endl;
+        cout << "Author Name: " << record[3] << endl;
+        cout << "Author Address: " << record[2] << endl;
     } else {
         istringstream iss(project);
         string attribute;
@@ -247,9 +245,9 @@ void QueryProcessor::printAuthorDetails(vector<string> &record, string project) 
             if (attribute == "authorid") {
                 cout << "Author ID: " << record[1] << endl;
             } else if (attribute == "authorname") {
-                cout << "Author Name: " << record[2] << endl;
+                cout << "Author Name: " << record[3] << endl;
             } else if (attribute == "address") {
-                cout << "Author Address: " << record[3] << endl;
+                cout << "Author Address: " << record[2] << endl;
             } else {
                 cout << "Unsupported attribute for Authors: " << attribute << endl;
             }

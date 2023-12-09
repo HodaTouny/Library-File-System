@@ -41,9 +41,10 @@ void PrimaryIndex:: deleteFromIndex(vector<pair<string, int>>& fileIndex, string
 
     fileIndex.erase(it, fileIndex.end());
 }
-bool PrimaryIndex:: insertIntoIndex(vector<pair<string, int>>& FileIndex, string key,string fileName){
+
+int PrimaryIndex:: insertIntoIndex(vector<pair<string, int>>& FileIndex, string key,string fileName){
     if(binarySearch(FileIndex,key)){
-        return false;
+        return -1;
     }
     int LastOffset = fileHelper.extractSecondValueFromFile(fileName);
     int previousSize = previousRecordSize(fileName);
@@ -51,7 +52,7 @@ bool PrimaryIndex:: insertIntoIndex(vector<pair<string, int>>& FileIndex, string
     FileIndex.push_back(pair<string ,int>{key,offset});
     sortPairs(FileIndex);
     fileHelper.updateOffset(offset,fileName);
-    return true;
+    return offset;
 }
 int PrimaryIndex:: previousRecordSize(string filename){
     ifstream file(filename);
@@ -65,15 +66,20 @@ int PrimaryIndex:: previousRecordSize(string filename){
     while (getline(file, currentLine)) {
         lastLine = currentLine;
     }
+    FilesHelper l;
     file.close();
     if(lastLine == ""){
         return 15;
     }
-    for(int i=0;i<lastLine.size();i++){
-        if(lastLine[i] == '|'){
-            break;
+    if (lastLine[0] == '*'){
+        firstValue = l.extractValueBetweenBars(lastLine);
+    }else {
+        for (int i = 0; i < lastLine.size(); i++) {
+            if (lastLine[i] == '|') {
+                break;
+            }
+            firstValue += lastLine[i];
         }
-        firstValue+=lastLine[i];
     }
     file.close();
     return stoi(firstValue)+2;

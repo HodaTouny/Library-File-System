@@ -5,15 +5,15 @@
 #include "LinkedList.h"
 #include "EntityFiles.h"
 using namespace std;
+
 class  IndexHelper {
 protected:
     EntityFiles fileSystem;
     FilesHelper fileHelper;
 public:
     void sortPairs(vector<pair<string, int>> &FileIndex);
-
     void updateLastValue(string fileName, int offset);
-    void writeHeader(string fileName);
+    void writeHeader(string fileName,int num);
     int calculateFixedOffset(int rnn);
     string writer(int integer,string number);
     void removeUnderscores(string& str);
@@ -21,11 +21,8 @@ public:
     int getValueAfterLastDelimiter(const string& filePath, int offset);
     int calculateVariableLengthOffset(int previousRecordSize,int LastOffset);
     bool binarySearch(vector<pair<string, int>> &fileIndex, string &target);
-public:
     string extractHeader(string fileName);
-
     int binarySearchInt(const vector<pair<string, int>> &vec, string key);
-
     void sort_Pairs(vector<std::pair<int, LinkedList<string> *>> &FileIndex);
 };
 

@@ -5,6 +5,7 @@
 using namespace std;
 
 class FilesHelper{
+protected:
 public:
     void removeUnderscores(string& str);
     string to_string(int value);
@@ -19,7 +20,7 @@ public:
     int findBestFit(LinkedList<string>&AVAIL,int recordLength);
     string extractValueBetweenBars( string input);
     string updateNextNodeData(string x, string secondString);
-    void appendToFile(const string data[], int dataSize,  string fileName);
+    int appendToFile(const string data[], int dataSize,  string fileName);
     void insertRecord(int offset, const string data[], int dataSize,  string fileName, int oldSize);
 
 };

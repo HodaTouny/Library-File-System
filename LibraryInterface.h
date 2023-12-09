@@ -1,5 +1,7 @@
-#ifndef LIBRARY_FILE_SYSTEM_INTERFACE_H
-#define LIBRARY_FILE_SYSTEM_INTERFACE_H
+
+#ifndef LIBRARY_FILE_SYSTEM_LIBRARYINTERFACE_H
+#define LIBRARY_FILE_SYSTEM_LIBRARYINTERFACE_H
+
 #include "LinkedList.h"
 #include "AVAILSystem.h"
 #include "IndexHelper.h"
@@ -33,4 +35,4 @@ public:
     ~LibraryInterface();
 };
 
-#endif //LIBRARY_FILE_SYSTEM_INTERFACE_H
+#endif //LIBRARY_FILE_SYSTEM_LIBRARYINTERFACE_H

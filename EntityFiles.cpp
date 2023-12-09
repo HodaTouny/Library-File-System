@@ -1,4 +1,6 @@
 #include "EntityFiles.h"
+#include "PrimaryIndex.h"
+#include "SecondaryIndex.h"
 vector<string> EntityFiles :: loadRecord(int offset, string fileName) {
     vector<string> record;
     ifstream file(fileName);
@@ -48,18 +50,22 @@ string EntityFiles::deleteRecord(int offset, string fileName) {
     string Soffset= to_string(offset);
     int header= extractFirstValueFromFile(fileName);
     string finalString = concat("*"+to_string(header), record[0]+"|");
+    string val = concat(to_string(header),record[0]);
     file << finalString;
     file.close();
     updateHeader(offset,fileName);
-    return record[1];
+    return val;
 }
 
+
+
 void EntityFiles::addRecord(LinkedList<string>&AVAIL,string fileName,string data[],int dataSize){
+    IndexHelper u;
     int recordL = findRecordLength(data,dataSize);
     int bestFit = findBestFit(AVAIL,recordL);
     int header = extractFirstValueFromFile(fileName);
     if (header == -1 || bestFit == 0) {
-        appendToFile(data, dataSize, fileName);
+        int y = appendToFile(data, dataSize, fileName);
     } else {
         auto current = AVAIL.head;
         while (current != nullptr) {
@@ -68,12 +74,12 @@ void EntityFiles::addRecord(LinkedList<string>&AVAIL,string fileName,string data
             int value = stoi(valueStr);
             if(value == bestFit) {
                 int offset;
-                size_t pos = availRecord.find("|");
+                size_t pos = availRecord.find('|');
                 offset = stoi(availRecord.substr(0, pos));
                 int size = stoi(availRecord.substr(pos + 1));
                 if (size == bestFit && current->next == nullptr) {
                     insertRecord(header, data, dataSize, fileName, size);
-                    updateHeader(offset,"Books.txt");
+                    updateHeader(offset,fileName);
                 }else if (size == bestFit) {
                     string nextNodeDataPtr =current->next->data;
                     if (!nextNodeDataPtr.empty()) {
@@ -94,15 +100,22 @@ void EntityFiles::addRecord(LinkedList<string>&AVAIL,string fileName,string data
 
 }
 
-void EntityFiles:: updateRecord(int offset,  string newValue, string fileName,  LinkedList<string>& availList) {
+void EntityFiles:: updateRecord(int offset,  string newValue, string fileName,  LinkedList<string>& availList,vector<pair<string, int>>& fileIndex,string filename2) {
+    PrimaryIndex prim;
     vector<string> originalRecord = loadRecord(offset, fileName);
     if (originalRecord.size() >= 3) {
+        string oldvalue = originalRecord[2];
         originalRecord[2] = newValue;
         originalRecord.erase(originalRecord.begin());
         string x = deleteRecord(offset, fileName);
         availList.insertAtTail(x, false,"");
-        appendToFile(originalRecord.data(),originalRecord.size(),fileName);
+        addRecord(availList,fileName, originalRecord.data());
+        cout<<"APS: "<<fileIndex.size()<<"\n";
+        prim.deleteFromIndex(fileIndex,originalRecord[0]);
+        cout<<"APS: "<<fileIndex.size()<<"\n";
+        int l = prim.insertIntoIndex(fileIndex,originalRecord[0],filename2);
+        cout<<"APS: "<<fileIndex.size()<<"\n";
 
+        updateOffset(l,fileName);
     }
 }
-

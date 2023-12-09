@@ -1,4 +1,3 @@
-
 #ifndef LIBRARY_FILE_SYSTEM_LINKEDLIST_H
 #define LIBRARY_FILE_SYSTEM_LINKEDLIST_H
 
@@ -41,6 +40,5 @@ public:
 
     SLLNode<T> *getNode(int index);
 };
-
 
 #endif //LIBRARY_FILE_SYSTEM_LINKEDLIST_H

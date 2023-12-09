@@ -148,7 +148,7 @@ int FilesHelper:: findBestFit(LinkedList<string>&AVAIL,int recordLength){
 }
 
 
-string FilesHelper::extractValueBetweenBars( string input) {
+string FilesHelper::extractValueBetweenBars(string input) {
     size_t startPos = input.find('|') + 1;
     if (startPos != string::npos ) {
         string valueStr = input.substr(startPos, input.size() - startPos);
@@ -170,23 +170,25 @@ string FilesHelper::updateNextNodeData(string x, string secondString) {
 }
 
 
-void FilesHelper:: appendToFile(const string data[], int dataSize,  string fileName) {
+int FilesHelper:: appendToFile(const string data[], int dataSize,  string fileName) {
     int recordLength = 0;
     ofstream outFile(fileName, ios::app);
     if (!outFile.is_open()) {
         cerr << "Error opening file: " << fileName << "\n";
-        return;
+        return -1;
     }
     for (int i = 0; i < dataSize; i++) {
         recordLength += data[i].size();
     }
     recordLength += dataSize;
-    outFile << recordLength;
+    string m = to_string(recordLength);
+    cout<<"rec: "<<recordLength<<"\n";
     for (int i = 0; i < dataSize; i++) {
-        outFile << "|" << data[i];
+        m += ("|" +data[i]);
     }
-    outFile << "\n";
+    outFile<<m<<"\n";
     outFile.close();
+    return recordLength;
 }
 
 void FilesHelper:: insertRecord(int offset, const string data[], int dataSize,  string fileName, int oldSize) {

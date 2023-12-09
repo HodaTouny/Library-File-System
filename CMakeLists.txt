@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(Library_File_System main.cpp
         LinkedList.cpp
-        Interface.cpp
+        cmake-build-debug/.cmake/Interface.cpp
         QueryProcessor.cpp
         PrimaryIndex.cpp
         SecondaryIndex.cpp
@@ -13,4 +13,6 @@ add_executable(Library_File_System main.cpp
         EntityFiles.cpp
         FilesHelper.cpp
         AVAILSystem.cpp
+        LibraryInterface.cpp
+        LibraryInterface.h
 )

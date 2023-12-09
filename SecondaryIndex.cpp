@@ -1,7 +1,7 @@
 #include "SecondaryIndex.h"
 
 void SecondaryIndex::deleteFromSecondaryIndex(vector<pair<string, int>>& fileIndex,vector<pair<int, LinkedList<string>*>>& secondaryIndex,
-                              const string& targetString, const string& targetName) {
+                                              const string& targetString, const string& targetName) {
     for (int i = 0; i < fileIndex.size(); i++) {
         if (fileIndex[i].first == targetName) {
             int rnn = fileIndex[i].second;
@@ -25,18 +25,20 @@ void SecondaryIndex:: processLinkedList(fstream& file, LinkedList<string>* linke
     }
     int offset = calculateFixedOffset(thirdValue);
     file.seekg(offset, ios::beg);
-    file<<'#';
     string line;
     getline(file, line);
+    cout<<"\n"<<line<<"\n";
+    file.seekg(offset, ios::beg);
+    file<<'#';
     removeUnderscores(line);
     vector<string> Data = parseString(line);
     string PKValue, NextValue,Rnn;
     if (Data.size() >= 3) {
         Rnn = Data[0];
         PKValue = Data[1];
-        linkedList->insertAtTail(PKValue, false,Rnn);
         NextValue = Data[2];
         int newThirdValue = stoi(NextValue);
+        linkedList->insertAtTail(PKValue, false,Rnn);
         processLinkedList(file, linkedList, newThirdValue);
     }
 }
@@ -52,7 +54,6 @@ vector<pair<int, LinkedList<string>*>> SecondaryIndex::loadLinkedListFile(string
     int numRecords = stoi(liney);
     string line;
     getline(file, line);
-
     for (int i = 0; i < numRecords; i++) {
         int offset = calculateFixedOffset(i);
         file.seekg(offset,ios::beg);
@@ -71,7 +72,6 @@ vector<pair<int, LinkedList<string>*>> SecondaryIndex::loadLinkedListFile(string
             data.push_back({firstValue, linkedList});
             continue;
         }
-
         PKValue = Data[1];
         LinkedList<string>* linkedList = new LinkedList<string>();
         linkedList->insertAtTail(PKValue,false, to_string(firstValue));
@@ -81,52 +81,44 @@ vector<pair<int, LinkedList<string>*>> SecondaryIndex::loadLinkedListFile(string
         processLinkedList(file, linkedList, thirdValue);
         data.push_back({firstValue, linkedList});
     }
-    int offs;
-    for(int i=0;i<numRecords;i++){
-        offs = calculateFixedOffset(i);
-        file.seekg(offs, ios::beg);
-        file<<to_string(i);
-    }
     file.close();
-    sort_Pairs(data);
     return data;
 }
-bool SecondaryIndex:: addRecordToSecondaryIndex(vector<pair<string, int>>& fileIndex,vector<pair<int,
-        LinkedList<string>*>>& secondaryIndex ,string data[],int& num){
-    if(binarySearch(fileIndex,data[2])){
-        return false;
-    }
+
+
+bool SecondaryIndex::addRecordToSecondaryIndex(vector<pair<string, int>>& fileIndex,
+                                               vector<pair<int, LinkedList<string>*>>& secondaryIndex,
+                                               string data[], int& num) {
     bool found = false;
     int rnn;
-    for (const auto& entry : fileIndex) {
-        if (entry.first == data[2]) {
-            found = true;
-            rnn = entry.second;
-            break;
-        }
+    QueryProcessor qp;
+    int index =qp.binarySearch(fileIndex,data[2]);
+    if(index!=-1) {
+        found=true;
+        rnn=fileIndex[index].second;
     }
-
     if (found) {
         for (auto& secondaryEntry : secondaryIndex) {
             if (secondaryEntry.first == rnn) {
-                secondaryEntry.second->insertAtTail(data[0],false, to_string(rnn));
-                num++;
+                secondaryEntry.second->insertAtTail(data[0], false, to_string(num));
                 break;
-
             }
         }
     } else {
         LinkedList<string>* newLinkedList = new LinkedList<string>();
         fileIndex.push_back({data[2], num});
         newLinkedList->insertAtTail(data[0], false, to_string(num));
-        secondaryIndex.push_back({ num++, newLinkedList });
+        secondaryIndex.push_back({num, newLinkedList});
+
     }
+    num++;
     sort_Pairs(secondaryIndex);
     return true;
 }
+
 void SecondaryIndex:: writeToFile(const vector<pair<string, int>>& fileIndex,
-                 const vector<pair<int, LinkedList<string>*>>& secondaryIndex,
-                 const string& file1, const string& file2) {
+                                  const vector<pair<int, LinkedList<string>*>>& secondaryIndex,
+                                  const string& file1, const string& file2,int num) {
     fstream File1(file1, ios::out);
     if (!File1.is_open()) {
         cerr << "Error opening file: " << file1 << endl;
@@ -137,25 +129,25 @@ void SecondaryIndex:: writeToFile(const vector<pair<string, int>>& fileIndex,
         cerr << "Error opening file: " << file2 << endl;
         return;
     }
-
     for (const auto &entry: fileIndex) {
-        File1 << entry.first << "|" << entry.second << endl;
+        File1 << entry.first << "|" << entry.second << "\n";
     }
     File1.close();
-    string header = writer(5, to_string(secondaryIndex.size()));
+    string header = writer(5, to_string(num));
     File2 <<header << endl;
     for (const auto &secondaryEntry: secondaryIndex) {
         LinkedList<string> *linkedList = secondaryEntry.second;
         SLLNode<string> *currentNode = linkedList->getHead();
         while (currentNode != nullptr) {
-            File2 << writer(5, to_string(secondaryEntry.first))<<"|"<<writer(15, currentNode->data);
+            File2 << writer(3,linkedList->getRecordNum(currentNode) )<< "|" << writer(15,currentNode->data);
             if(currentNode->markedForDeletion==true){
-                File2<< "|#__"<<endl;
-            }
-             if (currentNode->next == nullptr) {
-                File2 << "|-1_" << endl;
+                File2<< "|#__"<<"\n";
+            }else if (currentNode->next == nullptr) {
+
+                File2 << "|-1_" << "\n";
             } else {
-                File2 <<"|"<< linkedList->getRecordNum(linkedList->getNext(currentNode)) << endl;
+
+                File2 <<"|"<< writer(3,linkedList->getRecordNum(linkedList->getNext(currentNode))) <<"\n";
             }
             currentNode = linkedList->getNext(currentNode);
         }
@@ -163,6 +155,51 @@ void SecondaryIndex:: writeToFile(const vector<pair<string, int>>& fileIndex,
 }
 
 
+std::string firstLine;
+vector<std::pair<int, std::string>> SecondaryIndex::  readAndSortFile(const std::string& filename) {
+    std::vector<std::pair<int, std::string>> data;
+    IndexHelper x;
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Error opening file: " << filename << std::endl;
+        return data;
+    }
 
+    std::getline(file, firstLine);
+    std::string line;
+    while (std::getline(file, line)) {
+        string val = line;
+        string value ;
+        x.removeUnderscores(line);
+        cout<<line<<"\n";
+        for(int i=0;i<line.size();i++){
+            if(line[i] =='|'){
+                break;
+            }
+            value+=line[i];
+        }
+        cout<<value<<"\n";
+        int mm = stoi(value);
+        data.push_back({mm,val});
+    }
+    file.close();
+    sort(data.begin(), data.end(), [](const auto& a, const auto& b) {
+        return a.first < b.first;
+    });
 
+    return data;
+}
 
+void SecondaryIndex::  writeToToFile(const std::string& filename, const std::vector<std::pair<int, std::string>>& data) {
+    // Open the file
+    std::ofstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Error opening file: " << filename << std::endl;
+        return;
+    }
+    file<<firstLine<<"\n";
+    for (const auto& pair : data) {
+        file << pair.second << "\n";
+    }
+    file.close();
+}

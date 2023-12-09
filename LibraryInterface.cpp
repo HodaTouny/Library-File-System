@@ -1,11 +1,10 @@
-#include "Interface.h"
-#include <bits/stdc++.h>
+#include "LibraryInterface.h"
 #include "PrimaryIndex.h"
 #include "SecondaryIndex.h"
 using namespace std;
 AVAILSystem availSystem;
 PrimaryIndex primaryIndex;
-SecondaryIndex secondaryIndex;
+SecondaryIndex secondary;
 EntityFiles entityFiles;
 IndexHelper indexHelper;
 string Author_ID ;
@@ -112,19 +111,14 @@ void LibraryInterface::handleAddAuthor() {
     AuthorData[0] = Author_ID;
     AuthorData[2] = Author_Name;
     AuthorData[1] = Address;
-    bool found =primaryIndex.insertIntoIndex(AuthorPK,AuthorData[0],"Authors.txt");
-    if (found) {
+    int found = primaryIndex.insertIntoIndex(AuthorPK,AuthorData[0],"Authors.txt");
+    if (found != -1) {
         entityFiles.addRecord(AvailListAuthor, "Authors.txt", AuthorData);
-        secondaryIndex.addRecordToSecondaryIndex(AuthorSKFirst, AuthorSKSecond, AuthorData, Authorsheader);
-        cout<<"\n";
-        for (const auto& pair : AuthorSKSecond) {
-            std::cout << "F: " << pair.first << ",L: ";
-            pair.second->print();
-            std::cout << std::endl;
-        }
+        FilesHelper k; k.updateOffset(found,"Authors.txt");
+        secondary.addRecordToSecondaryIndex(AuthorSKFirst, AuthorSKSecond, AuthorData, Authorsheader);
     }
     else{
-        cout<<" this author exist!!!";
+        cout<<" this user exist!!!";
     }
 
 
@@ -161,21 +155,17 @@ void LibraryInterface::handleAddBook() {
     BookData[0] = ISBN;
     BookData[1] = Book_Title;
     BookData[2] = Author_ID;
-    bool found =primaryIndex.insertIntoIndex(BookPK,BookData[0],"Books.txt");
-    if (found) {
+    int found =primaryIndex.insertIntoIndex(BookPK,BookData[0],"Books.txt");
+    if (found != -1) {
         entityFiles.addRecord(AvailListBook, "Books.txt", BookData);
-        secondaryIndex.addRecordToSecondaryIndex(BookSKFirst, BookSKSecond, BookData, Booksheader);
-        cout<<"\n";
-        for (const auto& pair : BookSKSecond) {
-            std::cout << "F: " << pair.first << ",L: ";
-            pair.second->print();
-            std::cout << std::endl;
-        }
+        FilesHelper k; k.updateOffset(found,"Books.txt");
+        secondary.addRecordToSecondaryIndex(BookSKFirst, BookSKSecond, BookData, Booksheader);
     }
     else{
-        cout<<" this book exist!!!";
+        cout<<" this user exist!!!";
     }
 }
+
 void LibraryInterface::handleUpdateBookTitle() {
 
     cout << "Book ID of Book To Update: ";
@@ -191,7 +181,7 @@ void LibraryInterface::handleUpdateBookTitle() {
 
     int offset = indexHelper.binarySearchInt(BookPK,ISBN);
     cout<<"\n"<<offset<<"\n";
-    entityFiles.updateRecord(offset,Book_Title,"Books.txt",AvailListBook);
+    entityFiles.updateRecord(offset,Book_Title,"Books.txt",AvailListBook,BookPK,"BooksPK.txt");
 
 }
 
@@ -210,7 +200,7 @@ void LibraryInterface::handleUpdateAuthorName() {
     } while (Author_Name.length() > 30);
 
     int offset = indexHelper.binarySearchInt(AuthorPK,Author_ID);
-    entityFiles.updateRecord(offset,Author_Name,"Authors.txt",AvailListAuthor);
+    entityFiles.updateRecord(offset,Author_Name,"Authors.txt",AvailListAuthor,AuthorPK,"Authors.txt");
 
 }
 
@@ -219,11 +209,15 @@ void LibraryInterface::handleDeleteBook() {
     cin.ignore();
     getline(cin, ISBN);
     int offset = indexHelper.binarySearchInt(BookPK,ISBN);
-    vector <string> record = entityFiles.loadRecord(offset,"Books.txt");
-    string data = entityFiles.deleteRecord(offset,"Books.txt");
-    AvailListBook.insertAtTail(data, false,"");
-    primaryIndex.deleteFromIndex(BookPK,ISBN);
-    secondaryIndex.deleteFromSecondaryIndex(BookSKFirst,BookSKSecond,ISBN,record[2]);
+    if(offset == -1){
+        cout<<"This Book is not available now,it may be deleted before or doesn't add\n";
+    }else {
+        vector<string> record = entityFiles.loadRecord(offset, "Books.txt");
+        string data = entityFiles.deleteRecord(offset, "Books.txt");
+        AvailListBook.insertAtTail(data, false, "");
+        primaryIndex.deleteFromIndex(BookPK, ISBN);
+        secondary.deleteFromSecondaryIndex(BookSKFirst, BookSKSecond, ISBN, record[2]);
+    }
 }
 
 
@@ -233,11 +227,15 @@ void LibraryInterface::handleDeleteAuthor() {
     cin.ignore();
     getline(cin, Author_ID);
     int offset = indexHelper.binarySearchInt(AuthorPK,Author_ID);
-    vector <string> record = entityFiles.loadRecord(offset,"Authors.txt");
-    string data = entityFiles.deleteRecord(offset,"Authors.txt");
-    AvailListBook.insertAtTail(data, false,"");
-    primaryIndex.deleteFromIndex(AuthorPK,Author_ID);
-    secondaryIndex.deleteFromSecondaryIndex(AuthorSKFirst,AuthorSKSecond,Author_ID,record[2]);
+    if(offset == -1){
+        cout<<"This Author is not available now,it may be deleted before or doesn't add\n";
+    }else {
+        vector<string> record = entityFiles.loadRecord(offset, "Authors.txt");
+        string data = entityFiles.deleteRecord(offset, "Authors.txt");
+        AvailListBook.insertAtTail(data, false, "");
+        primaryIndex.deleteFromIndex(AuthorPK, Author_ID);
+        secondary.deleteFromSecondaryIndex(AuthorSKFirst, AuthorSKSecond, Author_ID, record[2]);
+    }
 
 }
 
@@ -263,6 +261,9 @@ void LibraryInterface::handlePrintBook() {
     string query = "SELECT * FROM Books WHERE ISBN = '"+ ISBN+"'";
     queryProcessor.processQuery(query,AuthorPK,BookPK,AuthorSKFirst,AuthorSKSecond,BookSKFirst,BookSKSecond);
 }
+
+
+
 LibraryInterface::LibraryInterface() {
     AvailListAuthor = availSystem.readAvailFromFile("AVAILAuthor.txt");
     AvailListBook = availSystem.readAvailFromFile("AVAILBook.txt");
@@ -270,8 +271,8 @@ LibraryInterface::LibraryInterface() {
     BookPK = primaryIndex.LoadIndexFile("BookPK.txt");
     AuthorSKFirst = primaryIndex.LoadIndexFile("AuthorsSKFirst.txt");
     BookSKFirst = primaryIndex.LoadIndexFile("BookSKFirst.txt");
-    //AuthorSKSecond = secondaryIndex.loadLinkedListFile("AuthorsSKSecond.txt");
-    //BookSKSecond = secondaryIndex.loadLinkedListFile("BookSKSecond.txt");
+    AuthorSKSecond = secondary.loadLinkedListFile("AuthorsSKSecond.txt");
+    BookSKSecond = secondary.loadLinkedListFile("BookSKSecond.txt");
     Authorsheader = stoi(indexHelper.extractHeader("AuthorsSKSecond.txt"));
     Booksheader = stoi(indexHelper.extractHeader("BookSKSecond.txt"));
 }
@@ -279,8 +280,16 @@ LibraryInterface::LibraryInterface() {
 LibraryInterface::~LibraryInterface() {
     primaryIndex.uploadIndexFile(AuthorPK,"AuthorPK.txt");
     primaryIndex.uploadIndexFile(BookPK,"BookPK.txt");
+
     availSystem.writeAvailToFile(AvailListBook,"AVAILBook.txt");
     availSystem.writeAvailToFile(AvailListAuthor,"AVAILAuthor.txt");
-    secondaryIndex.writeToFile(AuthorSKFirst,AuthorSKSecond,"AuthorsSKFirst.txt","AuthorsSKSecond.txt");
-   // secondaryIndex.writeToFile(BookSKFirst,BookSKSecond,"BookSKFirst.txt","BookSKSecond");
+
+    secondary.writeToFile(AuthorSKFirst,AuthorSKSecond,"AuthorsSKFirst.txt","AuthorsSKSecond.txt",Authorsheader);
+    secondary.writeToFile(BookSKFirst,BookSKSecond,"BookSKFirst.txt","BookSKSecond.txt",Booksheader);
+
+    vector<pair<int,string>> Author= secondary.readAndSortFile("AuthorsSKSecond.txt");
+    secondary.writeToToFile("AuthorsSKSecond.txt",Author);
+    vector<pair<int,string>> Book= secondary.readAndSortFile("BookSKSecond.txt");
+    secondary.writeToToFile("BookSKSecond.txt",Book);
+
 }

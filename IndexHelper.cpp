@@ -5,6 +5,13 @@ void IndexHelper:: sortPairs(vector<pair<string, int>> &FileIndex){
              return a.first < b.first;
          });
 }
+void IndexHelper:: sort_Pairs(vector<pair<int, LinkedList<string>*>> &FileIndex) {
+    sort(FileIndex.begin(), FileIndex.end(),
+              [](const pair<int, LinkedList<string>*>& a, const pair<int, LinkedList<string>*>& b) {
+                  return a.first < b.first;
+              });
+}
+
 
 string IndexHelper:: extractHeader(string fileName) {
     ifstream inputFile(fileName);
@@ -50,28 +57,20 @@ void IndexHelper:: updateLastValue(string fileName, int offset) {
     file << endl;
 }
 
-
-void IndexHelper:: writeHeader(string fileName) {
+void IndexHelper::writeHeader(string fileName,int num) {
     fstream file(fileName, ios::in | ios::out);
     if (!file) {
         cerr << "Error opening file: " << fileName << "\n";
         return;
     }
-    string number= extractHeader(fileName);
-    string firstLine;
-    getline(file, firstLine);
-    int newHeader = stoi(number)+1;
-    string Nheader= to_string(newHeader);
-    int underscoresNeeded = 5 - Nheader.length();
-
-    for (int i = 0; i < underscoresNeeded; ++i) {
-        Nheader += "_";
-    }
-    file.seekp(0, ios::beg);
-    file << Nheader;
+    file.seekg(0, ios::beg);
+    string existingHeader;
+    getline(file, existingHeader);
+    string Nheader = writer(5, to_string(num));
+    file.seekg(0, ios::beg);
+    file <<Nheader<<"\n";
     file.close();
 }
-
 
 int IndexHelper:: calculateFixedOffset(int rnn) {
     return 5 + (rnn * 23) + (rnn *2) + 2;
@@ -143,13 +142,6 @@ bool IndexHelper:: binarySearch( vector<pair<string, int>>& fileIndex, string& t
     }
 
     return false;
-}
-
-void IndexHelper:: sort_Pairs(std::vector<std::pair<int, LinkedList<string>*>> &FileIndex) {
-    std::sort(FileIndex.begin(), FileIndex.end(),
-              [](const std::pair<int, LinkedList<string>*>& a, const std::pair<int, LinkedList<string>*>& b) {
-                  return a.first < b.first;
-              });
 }
 
 
