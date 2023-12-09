@@ -214,9 +214,9 @@ void LibraryInterface::handleDeleteBook() {
     }else {
         vector<string> record = entityFiles.loadRecord(offset, "Books.txt");
         string data = entityFiles.deleteRecord(offset, "Books.txt");
-        AvailListBook.insertAtTail(data, false, "");
-        primaryIndex.deleteFromIndex(BookPK, ISBN);
         secondary.deleteFromSecondaryIndex(BookSKFirst, BookSKSecond, ISBN, record[2]);
+        // AvailListBook.insertAtTail(data, false, "");
+        primaryIndex.deleteFromIndex(BookPK, ISBN);
     }
 }
 
@@ -231,12 +231,11 @@ void LibraryInterface::handleDeleteAuthor() {
         cout<<"This Author is not available now,it may be deleted before or doesn't add\n";
     }else {
         vector<string> record = entityFiles.loadRecord(offset, "Authors.txt");
+        secondary.deleteFromSecondaryIndex(AuthorSKFirst, AuthorSKSecond, Author_ID, record[3]);
         string data = entityFiles.deleteRecord(offset, "Authors.txt");
-        AvailListBook.insertAtTail(data, false, "");
+       // AvailListBook.insertAtTail(data, false, "");
         primaryIndex.deleteFromIndex(AuthorPK, Author_ID);
-        secondary.deleteFromSecondaryIndex(AuthorSKFirst, AuthorSKSecond, Author_ID, record[2]);
     }
-
 }
 
 void LibraryInterface::handleWriteQuery() {
@@ -265,8 +264,8 @@ void LibraryInterface::handlePrintBook() {
 
 
 LibraryInterface::LibraryInterface() {
-    AvailListAuthor = availSystem.readAvailFromFile("AVAILAuthor.txt");
-    AvailListBook = availSystem.readAvailFromFile("AVAILBook.txt");
+    //AvailListAuthor = availSystem.readAvailFromFile("AVAILAuthor.txt");
+    //AvailListBook = availSystem.readAvailFromFile("AVAILBook.txt");
     AuthorPK = primaryIndex.LoadIndexFile("AuthorPK.txt");
     BookPK = primaryIndex.LoadIndexFile("BookPK.txt");
     AuthorSKFirst = primaryIndex.LoadIndexFile("AuthorsSKFirst.txt");
@@ -281,8 +280,8 @@ LibraryInterface::~LibraryInterface() {
     primaryIndex.uploadIndexFile(AuthorPK,"AuthorPK.txt");
     primaryIndex.uploadIndexFile(BookPK,"BookPK.txt");
 
-    availSystem.writeAvailToFile(AvailListBook,"AVAILBook.txt");
-    availSystem.writeAvailToFile(AvailListAuthor,"AVAILAuthor.txt");
+    //availSystem.writeAvailToFile(AvailListBook,"AVAILBook.txt");
+    //availSystem.writeAvailToFile(AvailListAuthor,"AVAILAuthor.txt");
 
     secondary.writeToFile(AuthorSKFirst,AuthorSKSecond,"AuthorsSKFirst.txt","AuthorsSKSecond.txt",Authorsheader);
     secondary.writeToFile(BookSKFirst,BookSKSecond,"BookSKFirst.txt","BookSKSecond.txt",Booksheader);

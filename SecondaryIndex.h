@@ -17,7 +17,7 @@ public:
                                       const string& file1, const string& file2,int num);
 
     void writeToToFile(const string &filename, const vector<std::pair<int, std::string>> &data);
-    void deleteFromSecondaryIndex(vector<pair<string, int>>& fileIndex,vector<pair<int, LinkedList<string>*>>& secondaryIndex,
+    bool deleteFromSecondaryIndex(vector<pair<string, int>>& fileIndex,vector<pair<int, LinkedList<string>*>>& secondaryIndex,
                                   const string& targetString, const string& targetName);
 
     vector<pair<int, std::string>> readAndSortFile(const string &filename);

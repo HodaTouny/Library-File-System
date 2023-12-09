@@ -1,21 +1,27 @@
 #include "SecondaryIndex.h"
 
-void SecondaryIndex::deleteFromSecondaryIndex(vector<pair<string, int>>& fileIndex,vector<pair<int, LinkedList<string>*>>& secondaryIndex,
+bool SecondaryIndex::deleteFromSecondaryIndex(vector<pair<string, int>>& fileIndex,
+                                              vector<pair<int, LinkedList<string>*>>& secondaryIndex,
                                               const string& targetString, const string& targetName) {
     for (int i = 0; i < fileIndex.size(); i++) {
         if (fileIndex[i].first == targetName) {
             int rnn = fileIndex[i].second;
             for (int j = 0; j < secondaryIndex.size(); j++) {
-                int index = secondaryIndex[j].second->indexOf(targetString);
-                if (index != -1) {
-                    secondaryIndex[j].second->markDeleted(index);
-                    if (secondaryIndex[j].first == rnn && secondaryIndex[j].second->head->next == nullptr) {
-                        fileIndex.erase(fileIndex.begin() + i);
+                if (secondaryIndex[j].first == rnn) {
+                    int index = secondaryIndex[j].second->indexOf(targetString);
+                    if (index != -1) {
+                        secondaryIndex[j].second->markDeleted(index);
+                        if (index == 0 && secondaryIndex[j].second->head->next == nullptr) {
+                            fileIndex.erase(fileIndex.begin() + i);
+                        }
+                        return true;
                     }
                 }
             }
         }
     }
+
+    return false;
 }
 
 
@@ -143,10 +149,8 @@ void SecondaryIndex:: writeToFile(const vector<pair<string, int>>& fileIndex,
             if(currentNode->markedForDeletion==true){
                 File2<< "|#__"<<"\n";
             }else if (currentNode->next == nullptr) {
-
                 File2 << "|-1_" << "\n";
             } else {
-
                 File2 <<"|"<< writer(3,linkedList->getRecordNum(linkedList->getNext(currentNode))) <<"\n";
             }
             currentNode = linkedList->getNext(currentNode);
