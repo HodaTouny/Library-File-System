@@ -1,6 +1,6 @@
 #include "EntityFiles.h"
 #include "PrimaryIndex.h"
-#include "SecondaryIndex.h"
+
 vector<string> EntityFiles :: loadRecord(int offset, string fileName) {
     vector<string> record;
     ifstream file(fileName);
@@ -39,7 +39,7 @@ vector<string> EntityFiles :: loadRecord(int offset, string fileName) {
 }
 
 
-string EntityFiles::deleteRecord(int offset, string fileName,LinkedList<string> &linked) {
+string EntityFiles::deleteRecord(int offset, string fileName) {
     fstream file(fileName, ios::in | ios::out);
     if (!file) {
         std::cerr << "Error opening file: " << fileName << "\n";
@@ -54,7 +54,6 @@ string EntityFiles::deleteRecord(int offset, string fileName,LinkedList<string> 
     file << finalString;
     file.close();
     updateHeader(offset,fileName);
-    linked.insertAtTail(val, false, "");
     return val;
 }
 
@@ -107,7 +106,8 @@ void EntityFiles:: updateRecord(int offset,  string newValue, string fileName,  
         string oldvalue = originalRecord[2];
         originalRecord[2] = newValue;
         originalRecord.erase(originalRecord.begin());
-        string x = deleteRecord(offset, fileName,availList);
+        string x = deleteRecord(offset, fileName);
+        availList.insertAtTail(x,false,"");
         addRecord(availList,fileName, originalRecord.data());
         prim.deleteFromIndex(fileIndex,originalRecord[0]);
         int l = prim.insertIntoIndex(fileIndex,originalRecord[0],filename2);

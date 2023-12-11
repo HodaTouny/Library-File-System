@@ -210,16 +210,16 @@ void LibraryInterface::handleDeleteBook() {
         cout<<"This Book is not available now,it may be deleted before or doesn't add\n";
     }else {
         vector<string> record = entityFiles.loadRecord(offset, "Books.txt");
-        entityFiles.deleteRecord(offset, "Books.txt",AvailListBook);
+        string data = entityFiles.deleteRecord(offset, "Books.txt");
         secondary.deleteFromSecondaryIndex(BookSKFirst, BookSKSecond, ISBN, record[2]);
         primaryIndex.deleteFromIndex(BookPK, ISBN);
+        AvailListBook.insertAtTail(data,false,"");
     }
 }
 
 
 
 void LibraryInterface::handleDeleteAuthor() {
-
     cout << "Author ID to delete: ";
     cin.ignore();
     getline(cin, Author_ID);
@@ -228,9 +228,10 @@ void LibraryInterface::handleDeleteAuthor() {
         cout<<"This Author is not available now,it may be deleted before or doesn't add\n";
     }else {
         vector<string> record = entityFiles.loadRecord(offset, "Authors.txt");
-        secondary.deleteFromSecondaryIndex(AuthorSKFirst, AuthorSKSecond, Author_ID, record[3]);
-        entityFiles.deleteRecord(offset, "Authors.txt",AvailListAuthor);
+        string data = entityFiles.deleteRecord(offset, "Authors.txt");
         primaryIndex.deleteFromIndex(AuthorPK, Author_ID);
+        secondary.deleteFromSecondaryIndex(AuthorSKFirst, AuthorSKSecond, Author_ID, record[3]);
+        AvailListAuthor.insertAtTail(data,false,"");
     }
 }
 
