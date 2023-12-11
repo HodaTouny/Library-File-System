@@ -15,40 +15,14 @@ LinkedList<string> AVAILSystem:: readAvailFromFile(string fileName) {
     return availList;
 }
 
-
-string AVAILSystem::AvailCreator(string fileName, int offset) {
-    LinkedList<string> availList;
-    ifstream file(fileName, ios::in);
-    if (!file.is_open()) {
-        cerr << "Error opening file for reading: " << fileName << "\n";
-        return "";
-    }
-    file.seekg(offset);
-    string line;
-    string extractedData;
-    getline(file, line);
-    size_t startPos = 1;
-    cout<<line<<"\n";
-    size_t firstPos = line.find('|', startPos);
-    if (firstPos != string::npos) {
-        size_t secondPos = line.find('|', firstPos + 1);
-        if (secondPos != string::npos) {
-            extractedData = line.substr(startPos, secondPos - startPos);
-        }
-    }
-    cout << extractedData;
-    file.close();
-    return extractedData;
-}
-
-void AVAILSystem::writeAvailToFile(const LinkedList<string>& availList, const string& fileName) {
+void AVAILSystem::writeAvailToFile(LinkedList<string>& availList, string fileName) {
     ofstream file(fileName, ios::out);
     if (!file.is_open()) {
         cerr << "Error opening file for writing: " << fileName << "\n";
         return;
     }
     SLLNode<string>* current = availList.head;
-    while (current) {
+    while (current != nullptr) {
         file << current->data << "\n";
         current = current->next;
     }

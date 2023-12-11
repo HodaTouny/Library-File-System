@@ -14,6 +14,7 @@ LinkedList<T>::LinkedList() {
     size = 0;
 }
 
+
 template <class T>
 void LinkedList<T>::insertAtHead(T element ,bool marked,string Rnum) {
     SLLNode<T>* newNode = new SLLNode<T>(element,marked,Rnum);
@@ -41,36 +42,14 @@ void LinkedList<T>::insertAtTail(T element,bool marked,string Rnum) {
 }
 
 template <class T>
-T LinkedList<T>::removeAtHead() {
-    if (head == nullptr) {
-        std::cout << "Empty list!!!" << std::endl;
-        return T();  // Return a default-constructed value for the type T
-    }
-
-    T removedData;
-    SLLNode<T>* ptr = head;
-
-    if (head->next == nullptr) {
-        removedData = head->data;
-        delete head;
-        head = nullptr;
-    } else {
-        removedData = head->data;
-        head = head->next;
-        delete ptr;
-    }
-
-    size--;
-    return removedData;
-}
-
-template <class T>
 std::string LinkedList<T>::getRecordNum(SLLNode<T>* currentNode) const {
     if (currentNode == nullptr) {
         return "";
     }
     return currentNode->recordNum;
 }
+
+
 template <class T>
 SLLNode<T>* LinkedList<T>::getHead() const {
     return head;
@@ -118,6 +97,7 @@ T * LinkedList<T>::getNextNodeDataPtr(){
 
     return &(head->next->data);
 }
+
 template <class T>
 int LinkedList<T>::indexOf(T element) {
     SLLNode<T>* curr = head;

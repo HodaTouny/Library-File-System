@@ -39,7 +39,7 @@ vector<string> EntityFiles :: loadRecord(int offset, string fileName) {
 }
 
 
-string EntityFiles::deleteRecord(int offset, string fileName) {
+string EntityFiles::deleteRecord(int offset, string fileName,LinkedList<string> &linked) {
     fstream file(fileName, ios::in | ios::out);
     if (!file) {
         std::cerr << "Error opening file: " << fileName << "\n";
@@ -54,18 +54,18 @@ string EntityFiles::deleteRecord(int offset, string fileName) {
     file << finalString;
     file.close();
     updateHeader(offset,fileName);
+    linked.insertAtTail(val, false, "");
     return val;
 }
 
 
 
 void EntityFiles::addRecord(LinkedList<string>&AVAIL,string fileName,string data[],int dataSize){
-    IndexHelper u;
     int recordL = findRecordLength(data,dataSize);
     int bestFit = findBestFit(AVAIL,recordL);
     int header = extractFirstValueFromFile(fileName);
     if (header == -1 || bestFit == 0) {
-        int y = appendToFile(data, dataSize, fileName);
+         appendToFile(data, dataSize, fileName);
     } else {
         auto current = AVAIL.head;
         while (current != nullptr) {
@@ -107,15 +107,10 @@ void EntityFiles:: updateRecord(int offset,  string newValue, string fileName,  
         string oldvalue = originalRecord[2];
         originalRecord[2] = newValue;
         originalRecord.erase(originalRecord.begin());
-        string x = deleteRecord(offset, fileName);
-        availList.insertAtTail(x, false,"");
+        string x = deleteRecord(offset, fileName,availList);
         addRecord(availList,fileName, originalRecord.data());
-        cout<<"APS: "<<fileIndex.size()<<"\n";
         prim.deleteFromIndex(fileIndex,originalRecord[0]);
-        cout<<"APS: "<<fileIndex.size()<<"\n";
         int l = prim.insertIntoIndex(fileIndex,originalRecord[0],filename2);
-        cout<<"APS: "<<fileIndex.size()<<"\n";
-
         updateOffset(l,fileName);
     }
 }

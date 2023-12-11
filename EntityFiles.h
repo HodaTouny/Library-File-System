@@ -9,7 +9,7 @@ using namespace std;
 class EntityFiles : public  FilesHelper{
 public:
     vector<string> loadRecord(int offset, string fileName);
-    string deleteRecord(int offset, string fileName);
+    string deleteRecord(int offset, string fileName,LinkedList<string> &linked);
     void addRecord(LinkedList<string>&AVAIL,string fileName,string data[],int dataSize=3);
 
 

@@ -20,9 +20,9 @@ public:
     vector<string> parseString(const string& inputString);
     int getValueAfterLastDelimiter(const string& filePath, int offset);
     int calculateVariableLengthOffset(int previousRecordSize,int LastOffset);
-    bool binarySearch(vector<pair<string, int>> &fileIndex, string &target);
+    bool binarySearch(vector<pair<string, int>> &fileIndex, string target);
     string extractHeader(string fileName);
-    int binarySearchInt(const vector<pair<string, int>> &vec, string key);
+    int binarySearchInt(vector<pair<string, int>> &vec, string key);
     void sort_Pairs(vector<std::pair<int, LinkedList<string> *>> &FileIndex);
 };
 

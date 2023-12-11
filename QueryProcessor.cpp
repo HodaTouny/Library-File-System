@@ -1,10 +1,6 @@
-#include <bits/stdc++.h>
 #include "QueryProcessor.h"
-#include "FilesHelper.h"
-#include "EntityFiles.h"
-#include "IndexHelper.h"
-#include "PrimaryIndex.h"
-#include "SecondaryIndex.h"
+
+
 EntityFiles entity;
 
 void QueryProcessor::processQuery(string query,vector<pair<string,int>>authorPK,
@@ -23,7 +19,6 @@ void QueryProcessor::processQuery(string query,vector<pair<string,int>>authorPK,
     AuthorSKSecond=authorSKSecond;
     BookSKSecond=bookSKSecond;
 
-    string command, project,tableName, columnName, value;
     size_t posEqual = query.find('=');
     if (posEqual != string::npos) {
         transform(query.begin(), query.begin() + posEqual, query.begin(), ::tolower);
@@ -32,6 +27,8 @@ void QueryProcessor::processQuery(string query,vector<pair<string,int>>authorPK,
     } parseQuery(query, command,project, tableName, columnName, value);
 
 }
+
+
 void QueryProcessor::parseQuery(const string &query, string &command, string &project, string &tableName, string &columnName, string &value) {
     size_t pos = query.find_first_not_of(" ");
     command = query.substr(pos, query.find(" ", pos) - pos);
@@ -121,6 +118,10 @@ void QueryProcessor::searchAuthors(string &project, string columnName,  string &
         if (index_1 != -1) {
             int rnn = AuthorSKFirst[index_1].second;
             int vecRNN = binarySearch(AuthorSKSecond, rnn);
+            if (vecRNN == -1) {
+                cout << "Author with AuthorName '" << value << "' not found." << endl;
+                return;
+            }
             LinkedList<string> *list = AuthorSKSecond[vecRNN].second;
             for (int i = 0; i < list->size; i++) {
                 string value = list->getNode(i)->data;
@@ -156,6 +157,10 @@ void QueryProcessor::searchBooks(string &project,  string &columnName,  string &
         if (index_1 != -1) {
             int rnn = BookSKFirst[index_1].second;
             int vecRNN = binarySearch(BookSKSecond, rnn);
+            if(vecRNN == -1) {
+                cout << "Book with AuthorID '" << value << "' not found." << endl;
+                return;
+            }
             LinkedList<string> *list = BookSKSecond[vecRNN].second;
             for (int i = 0; i < list->size; i++) {
                 string value = list->getNode(i)->data;

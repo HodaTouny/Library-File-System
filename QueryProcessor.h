@@ -1,19 +1,17 @@
 #ifndef LIBRARY_FILE_SYSTEM_QUERYPROCESSOR_H
 #define LIBRARY_FILE_SYSTEM_QUERYPROCESSOR_H
 
-
-
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
 #include"IndexHelper.h"
 #include "AVAILSystem.h"
+#include "FilesHelper.h"
+#include "EntityFiles.h"
 #include "bits/stdc++.h"
+
 using namespace std;
 
 class QueryProcessor {
 private:
+    string command, project,tableName, columnName, value;
     vector<pair<string,int>>AuthorPK;
     vector<pair<string,int>>BookPK;
     vector<pair<string,int>>AuthorSKFirst;

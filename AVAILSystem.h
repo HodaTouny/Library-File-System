@@ -8,7 +8,6 @@ using namespace std;
 class  AVAILSystem {
 public:
     LinkedList<string> readAvailFromFile(string fileName);
-    void writeAvailToFile(const LinkedList<string> &availList, const string &fileName);
-    string AvailCreator(string fileName, int offset);
+    void writeAvailToFile(LinkedList<string> &availList,string fileName);
 };
 #endif //LIBRARY_FILE_SYSTEM_AVAILSYSTEM_H

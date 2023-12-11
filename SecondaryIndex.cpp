@@ -20,7 +20,6 @@ bool SecondaryIndex::deleteFromSecondaryIndex(vector<pair<string, int>>& fileInd
             }
         }
     }
-
     return false;
 }
 
@@ -33,7 +32,6 @@ void SecondaryIndex:: processLinkedList(fstream& file, LinkedList<string>* linke
     file.seekg(offset, ios::beg);
     string line;
     getline(file, line);
-    cout<<"\n"<<line<<"\n";
     file.seekg(offset, ios::beg);
     file<<'#';
     removeUnderscores(line);
@@ -159,30 +157,28 @@ void SecondaryIndex:: writeToFile(const vector<pair<string, int>>& fileIndex,
 }
 
 
-std::string firstLine;
-vector<std::pair<int, std::string>> SecondaryIndex::  readAndSortFile(const std::string& filename) {
-    std::vector<std::pair<int, std::string>> data;
+string firstLine;
+vector<pair<int, string>> SecondaryIndex:: readAndSortFile(const string& filename) {
+    vector<pair<int, string>> data;
     IndexHelper x;
-    std::ifstream file(filename);
+    ifstream file(filename);
     if (!file.is_open()) {
-        std::cerr << "Error opening file: " << filename << std::endl;
+        cerr << "Error opening file: " << filename << std::endl;
         return data;
     }
 
-    std::getline(file, firstLine);
-    std::string line;
-    while (std::getline(file, line)) {
+    getline(file, firstLine);
+     string line;
+    while (getline(file, line)) {
         string val = line;
         string value ;
         x.removeUnderscores(line);
-        cout<<line<<"\n";
         for(int i=0;i<line.size();i++){
             if(line[i] =='|'){
                 break;
             }
             value+=line[i];
         }
-        cout<<value<<"\n";
         int mm = stoi(value);
         data.push_back({mm,val});
     }
@@ -194,11 +190,10 @@ vector<std::pair<int, std::string>> SecondaryIndex::  readAndSortFile(const std:
     return data;
 }
 
-void SecondaryIndex::  writeToToFile(const std::string& filename, const std::vector<std::pair<int, std::string>>& data) {
-    // Open the file
-    std::ofstream file(filename);
+void SecondaryIndex::  writeToToFile(const string& filename, const vector<pair<int,string>>& data) {
+    ofstream file(filename);
     if (!file.is_open()) {
-        std::cerr << "Error opening file: " << filename << std::endl;
+        cerr << "Error opening file: " << filename << std::endl;
         return;
     }
     file<<firstLine<<"\n";

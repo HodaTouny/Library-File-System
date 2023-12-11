@@ -7,7 +7,7 @@
 #include "IndexHelper.h"
 #include"QueryProcessor.h"
 class LibraryInterface{
-private:
+public:
     LinkedList<string>AvailListAuthor;
     LinkedList<string>AvailListBook;
     vector<pair<string,int>>AuthorPK;
@@ -20,7 +20,7 @@ private:
     int Booksheader;
     void handleAddAuthor();
     void handleAddBook();
-    void handleUpdateAuthorName();
+    void handleUpdateAuthorAddress();
     void handleUpdateBookTitle();
     void handleDeleteAuthor();
     void handleDeleteBook();
